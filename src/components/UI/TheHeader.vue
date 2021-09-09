@@ -2,6 +2,7 @@
   <header> 
     <span>App Title</span>
     <div><q-btn @click="showHelp=true; step=3" padding="none" color="white" flat icon="help"  /></div>
+   
   </header>
 
     <!-- INTRO DIALOG -->
@@ -30,7 +31,13 @@ export default {
       showHelp: false,
       step: 1
     }
+  },
+  methods: {
+    selectPanelType(event){
+      console.log(event)
+    }
   }
+
 }
 </script>
 
@@ -77,6 +84,9 @@ export default {
       position: relative;
       z-index: 10;
       display: flex;
+    }
+    .selected{
+      color: #8c9fb9
     }
 
 }

@@ -15,7 +15,9 @@ export default createStore({
       supportingMapLayersURL:'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
       supportingLayersSkip:[],
       supportingLayersTitle: 'Supporting Layers',
-      supportingLayersShowOnMap: true
+      supportingLayersOnMap: true,
+      supportingLayersInPanel: true,
+      panelDisplayType: "tabsHorizontal" //plain, tabsHorizontal, tabsVertical
     },
       // app state info -- supporting layers
       tree: {ticked:[], expanded:[]}, 

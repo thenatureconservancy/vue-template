@@ -1,46 +1,8 @@
 <template>
  
-    <div class="q-pt-md">
-
-    <!--Example with supporting layers in a tab-->
-    <div class="q-gutter-y-md">
-      <q-card flat>
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="justify"
-          narrow-indicator
-        >
-          
-          <q-tab name="supporting" label="Supporting Layers" />
-          <q-tab name="panel1" label="Panel 1" />
-          <q-tab name="panel2" label="Panel 2" />
-        </q-tabs>
-
-        <q-separator />
-
-        <q-tab-panels v-model="tab" animated >
-          <q-tab-panel name="panel1" class="panel">
-             <div>            
-              </div>
-          </q-tab-panel>
-          <q-tab-panel name="panel2" class="panel">
-             <div>            
-              </div>
-          </q-tab-panel>
-
-          <q-tab-panel name="supporting" class="panel">
-             <div>
-              <SupportingLayers displayClass="supportingLayersPanel"/>
-             </div>
-          </q-tab-panel>
-        </q-tab-panels>
-      </q-card>
+    <div class="q-pa-lg panel">
+          <SupportingLayers displayClass="supportingLayersPanel"/>
     </div>
-  </div>
   
 </template>
 
