@@ -1,5 +1,5 @@
 <template>
-  <div  :class="displayClass" v-if="$store.state.data.supportingLayers" @click.stop @keypress.stop >
+  <div :class="displayClass" v-if="$store.state.data.supportingLayers" @click.stop @keypress.stop >
     <p class="text-subtitle2 text-primary q-mb-none"> {{$store.state.config.supportingLayersTitle}}</p>
     <p>Use the search to filter layers or expand the contents to browse</p>
      <q-input ref="filterRef" class="q-mb-md" outlined dense v-model="filter" label="Begin typing to filter layers">
@@ -8,13 +8,14 @@
       </template>
     </q-input>
     <q-tree
+      ref="tree"
       :nodes="$store.state.data.supportingLayers"
       node-key="id"
       tick-strategy="leaf"
       v-model:ticked="ticked"
       v-model:expanded="expanded"
       :filter = "filter"
-    >
+     >
       <template v-slot:default-header="prop">
         <div class="row items-center" v-if="prop.node.icon" >
           <div class="text-weight-bold text-primary"  >{{ prop.node.label }}</div>
@@ -74,7 +75,7 @@ export default {
   props:   ['displayClass'],  
 
   setup () {
-    //TODO: this is the setup for the filter.  I think this can be moved to data obj.
+    //TODO: this is the setup for the filter.  I think this can be moved to data obj. 
     const filter = ref('')
     const filterRef = ref(null)
     return {
@@ -90,8 +91,15 @@ export default {
   },
 
   watch: {
-    ticked: function(){        
-      this.$store.commit('updateTreeState', {ticked: this.ticked, expanded: this.expanded})
+    ticked: function(){    
+      //get type and create ticked object with layer id and layer type to retrieve in map
+      let tickedObj = []
+      this.ticked.forEach((layer) => {
+          let node = this.$refs.tree.getNodeByKey(layer)
+          let type = node.type
+          tickedObj.push({id: layer, type: type})
+      })
+      this.$store.commit('updateTreeState', {ticked: tickedObj, expanded: this.expanded})
     }
   },
   methods: {

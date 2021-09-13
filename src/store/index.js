@@ -12,12 +12,18 @@ export default createStore({
     config: {
       // config info 
       skagitMapLayersURL: '',
-      supportingMapLayersURL:'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
+      supportingMapLayersURL: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
+      supportingMapLayers: { mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
+                              skipLayers: [],
+                              title: "Massachussets",
+                              popupTemplate: [{title: 'Watershed Boundary', field: '', label:'', id: '1'}, {title: 'Town Boundary', field: '', label:'', id: '2'}]
+                           },
+                              
       supportingLayersSkip:[],
       supportingLayersTitle: 'Supporting Layers',
       supportingLayersOnMap: true,
       supportingLayersInPanel: true,
-      panelDisplayType: "tabsHorizontal" //plain, tabsHorizontal, tabsVertical
+      panelDisplayType: "tabsVertical" //plain, tabsHorizontal, tabsVertical
     },
       // app state info -- supporting layers
       tree: {ticked:[], expanded:[]}, 
@@ -63,7 +69,7 @@ export default createStore({
               // Group Layer with no parent
              if (l.type == "Group Layer" && !l.parentLayer){
                 //push the object to the list 
-                obj.push({label: l.name, children: [], id: l.id, noTick: true})
+                obj.push({label: l.name, children: [], id: l.id, noTick: true, type: l.type})
                 //find the index of the object we just pushed, saves the reference to the location
                 let parentIndex = obj.findIndex(( obj => obj.id == l.id))
                 //save the parent node to the store with reference to its location in the object
@@ -77,7 +83,7 @@ export default createStore({
                     let parentLoc = storeNodes[nodesIndex].parentLoc 
                     
                     //push the child to the parent            
-                    parentLoc.children.push({label: l.name, children: [], body: 'toggle', id: l.id, description: l.description})
+                    parentLoc.children.push({label: l.name, children: [], body: 'toggle', id: l.id, description: l.description, type: l.type})
                     supportingSublayerList.push({id:l.id, visible:false, opacity: 1})
               }
               // group layer with parent
@@ -88,7 +94,7 @@ export default createStore({
                 let parentLoc = storeNodes[nodesIndex].parentLoc 
                 //push the new parent into the found parent as child
                
-                parentLoc.children.push({label: l.name, children: [], id: l.id, noTick: true})
+                parentLoc.children.push({label: l.name, children: [], id: l.id, noTick: true, type: l.type})
                 //find the index of the child we just pushed
                 let parentIndex = parentLoc.children.findIndex(( obj => obj.id == l.id))   
                 //save the reference to the location          
@@ -98,7 +104,7 @@ export default createStore({
              }
               // feature layer with no parent length = number of nodes
               if (l.type !== "Group Layer" && !l.parentLayer){
-                  obj.push({label: l.name, children: [], body: 'toggle', id: l.id, description: l.description})
+                  obj.push({label: l.name, children: [], body: 'toggle', id: l.id, description: l.description, type: l.type})
                   supportingSublayerList.push({id:l.id, visible:false, opacity: 1})
               }
             }
