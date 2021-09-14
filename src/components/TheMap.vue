@@ -195,13 +195,36 @@ export default {
               esri.map.layers.items[i].visible = true
             }
           else{
-            console.log('creates feature layer')
-            esri.map.add( new FeatureLayer({
-              url: this.$store.state.config.supportingMapLayersURL + "/" + l.id,         
-            }))
-          }
-        }
-     })
+            //check to see if fl has a popup template defined
+            let layerList = this.$store.state.config.supportingMapLayers.popupTemplate
+            let i = layerList.findIndex(layer => layer.id == l.id)
+            if (i >= 0){
+              let template = {
+                  title: layerList[i].title,
+                  content: [
+                    {
+                      type: "text",
+                      text: layerList[i].label + ":  <b>{ " + layerList[i].field + "}</b>" 
+                    },
+                  ] 
+                }
+              esri.map.add( new FeatureLayer({
+                url: this.$store.state.config.supportingMapLayersURL + "/" + l.id,  
+                popupTemplate: template      
+              }))
+            }
+            //if no popup defined create the feature layer without popup
+            else{
+               esri.map.add( new FeatureLayer({
+                url: this.$store.state.config.supportingMapLayersURL + "/" + l.id,  
+              }))
+            }
+          
+           
+               
+              }
+            }
+        })
     },
 
     updateSupportingOpacity(){

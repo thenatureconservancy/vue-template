@@ -13,10 +13,10 @@ export default createStore({
       // config info 
       skagitMapLayersURL: '',
       supportingMapLayersURL: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
-      supportingMapLayers: { mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
+      supportingMapLayers: {  mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
                               skipLayers: [],
                               title: "Massachussets",
-                              popupTemplate: [{title: 'Watershed Boundary', field: '', label:'', id: '1'}, {title: 'Town Boundary', field: '', label:'', id: '2'}]
+                              popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: '1'}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: '2'}]
                            },
                               
       supportingLayersSkip:[],
