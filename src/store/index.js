@@ -11,15 +11,12 @@ export default createStore({
     },
     config: {
       // config info 
-      skagitMapLayersURL: '',
-      supportingMapLayersURL: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
       supportingMapLayers: {  mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
                               skipLayers: [],
                               title: "Massachussets",
                               popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: '1'}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: '2'}]
                            },
                               
-      supportingLayersSkip:[],
       supportingLayersTitle: 'Supporting Layers',
       supportingLayersOnMap: true,
       supportingLayersInPanel: true,
@@ -57,7 +54,7 @@ export default createStore({
   actions: {
   
     requestSupportingLayers(context){
-      esriRequest(context.state.config.supportingMapLayersURL + "/layers?f=pjson", {responseType: "json"}).then(function (response) {
+      esriRequest(context.state.config.supportingMapLayers.mapService + "/layers?f=pjson", {responseType: "json"}).then(function (response) {
         let layerJson = response.data.layers
         let obj = []
         let storeNodes = []
@@ -65,7 +62,7 @@ export default createStore({
 
         layerJson.forEach((l) => {
           // add layer to layer viewer if it's id is not present in the skip array
-          if (context.state.config.supportingLayersSkip.indexOf(l.id) == -1){
+          if (context.state.config.supportingMapLayers.skipLayers.indexOf(l.id) == -1){
               // Group Layer with no parent
              if (l.type == "Group Layer" && !l.parentLayer){
                 //push the object to the list 

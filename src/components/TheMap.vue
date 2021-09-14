@@ -98,7 +98,7 @@ export default {
 
     //add supporting map layer
     esri.supportingMapLayer = new MapImageLayer({
-      url: this.$store.state.config.supportingMapLayersURL,
+      url: this.$store.state.config.supportingMapLayers.mapService,
       sublayers: []
     })
     esri.map.add(esri.supportingMapLayer)
@@ -177,7 +177,7 @@ export default {
       //turn off all feature layer visibility
       esri.map.layers.items.forEach((fl) => {
         if (fl.type === 'feature'){
-        fl.visible = false
+          fl.visible = false
         }
       })
       // turn on all sublayers that are part of supportingMapVisibleLayers object
@@ -209,22 +209,19 @@ export default {
                   ] 
                 }
               esri.map.add( new FeatureLayer({
-                url: this.$store.state.config.supportingMapLayersURL + "/" + l.id,  
+                url: this.$store.state.config.supportingMapLayers.mapService + "/" + l.id,  
                 popupTemplate: template      
               }))
             }
             //if no popup defined create the feature layer without popup
             else{
-               esri.map.add( new FeatureLayer({
-                url: this.$store.state.config.supportingMapLayersURL + "/" + l.id,  
+              esri.map.add( new FeatureLayer({
+                url: this.$store.state.config.supportingMapLayers.mapService + "/" + l.id,  
               }))
             }
-          
-           
-               
-              }
-            }
-        })
+          }
+        }
+      })
     },
 
     updateSupportingOpacity(){
