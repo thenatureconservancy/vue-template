@@ -1,8 +1,7 @@
 <template>
-   
   <div id="map">
     <div id="supportingLayers" v-if="$store.state.config.supportingLayersOnMap">
-      <SupportingLayers  displayClass="supportingLayersMap"/>
+      <SupportingLayers displayClass="supportingLayersMap"/>
    </div>
     <div id="toolbarDiv" class="">
        <button
@@ -55,7 +54,7 @@ export default {
   },
   computed: {
     supportingMapVisibleLayers(){
-      //returns list of all ticked objects [{id: layer, type: type}, ...]
+      //returns list of all ticked objects [{mapService: index in config, id: layerid, type: type}, ...]
       return this.$store.state.tree.ticked
     },
     supportingVisibleLayerOpacity(){
@@ -90,18 +89,18 @@ export default {
     //create the map view 
     const mapView = new MapView({
       map: esri.map,
-      center: [-70.99501567725498, 42.310350073610834],
-      //center: [-122.506479,48.370655],
+      //center: [-70.99501567725498, 42.310350073610834],
+      center: [-122.506479,48.370655],
       zoom: 11,
       container: this.$el
     })
 
-    //add supporting map layer
-    esri.supportingMapLayer = new MapImageLayer({
-      url: this.$store.state.config.supportingMapLayers.mapService,
-      sublayers: []
+    //add supporting map layers listed in config
+    this.$store.state.config.supportingMapLayers.forEach((service) => {  
+      esri.map.add( new MapImageLayer({
+        url: service.mapService,
+      }))
     })
-    esri.map.add(esri.supportingMapLayer)
 
     //add supporting layers widget to map if true
     if (this.$store.state.config.supportingLayersOnMap){
@@ -171,32 +170,40 @@ export default {
    
     updateSupportingVisibility(){
       // turn off all raster layer visibility
-      esri.supportingMapLayer.sublayers.forEach((sl) => {
-         sl.visible = false
-       })
-      //turn off all feature layer visibility
+      //esri.supportingMapLayer.sublayers.forEach((sl) => {
+      //   sl.visible = false
+      // })
+      //turn off all feature layer visibility //add rasters to this
       esri.map.layers.items.forEach((fl) => {
         if (fl.type === 'feature'){
           fl.visible = false
         }
+        if (fl.type == 'map-image'){
+          fl.sublayers.items.forEach((sl) => {
+            sl.visible = false
+          })
+        }
       })
-      // turn on all sublayers that are part of supportingMapVisibleLayers object
+      // turn on all sublayers that are checked in the TOC
       this.supportingMapVisibleLayers.forEach((l) => {
-        //if type is raster layer - find the sublayer by id and make visible
+        //if type is raster layer - find the sublayer and make visible
         if (l.type === 'Raster Layer'){
-          let sublayer = esri.supportingMapLayer.findSublayerById(l.id)
-          sublayer.visible = true
+           let i = esri.map.layers.items.findIndex( layer => layer.type == 'map-image' && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService)
+           let si = esri.map.layers.items[i].sublayers.items.findIndex( sublayer => sublayer.id == l.id)
+           esri.map.layers.items[i].sublayers.items[si].visible = true
         }
         if (l.type === 'Feature Layer'){
           //check to see if feature layer exists.  if it does make it visible, if not create it.
-          let i = esri.map.layers.items.findIndex(layer => layer.layerId == l.id)
+          let i = esri.map.layers.items.findIndex( layer => layer.layerId == l.id && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService)
+        
           if(i >=0 ){
               console.log('finds feature layer')
               esri.map.layers.items[i].visible = true
             }
           else{
             //check to see if fl has a popup template defined
-            let layerList = this.$store.state.config.supportingMapLayers.popupTemplate
+            console.log('creates feature layer')
+            let layerList = this.$store.state.config.supportingMapLayers[l.mapServiceIndex].popupTemplate
             let i = layerList.findIndex(layer => layer.id == l.id)
             if (i >= 0){
               let template = {
@@ -208,15 +215,16 @@ export default {
                     },
                   ] 
                 }
+              //get index of map server
               esri.map.add( new FeatureLayer({
-                url: this.$store.state.config.supportingMapLayers.mapService + "/" + l.id,  
+                url: this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService + "/" + l.id,  
                 popupTemplate: template      
               }))
             }
             //if no popup defined create the feature layer without popup
             else{
               esri.map.add( new FeatureLayer({
-                url: this.$store.state.config.supportingMapLayers.mapService + "/" + l.id,  
+                url: this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService + "/" + l.id,  
               }))
             }
           }
@@ -230,13 +238,14 @@ export default {
       sublayer.opacity = this.supportingVisibleLayerOpacity.value
     },
 
+  /* remove this function and associated variables 
     addSupportingLayers(){
       //add all raster layers to the map with visibility false
       //this method only gets run once when the map is loaded
       //esri.supportingMapLayer.sublayers = this.supportingSublayerList
       //console.log( esri.supportingMapLayer.sublayers)
       console.log('doing nothing')
-    },
+    },*/
 
     activateAreaMeasurement(){
       const distanceButton = document.getElementById("distance")

@@ -37,7 +37,7 @@
 
           <q-tab-panel name="supporting" class="panel">
              <div>
-              <SupportingLayers displayClass="supportingLayersPanel"/>
+              <SupportingLayers  displayClass="supportingLayersPanel"/>
              </div>
           </q-tab-panel>
         </q-tab-panels>

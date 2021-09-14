@@ -97,7 +97,8 @@ export default {
       this.ticked.forEach((layer) => {
           let node = this.$refs.tree.getNodeByKey(layer)
           let type = node.type
-          tickedObj.push({id: layer, type: type})
+          let layerInfo = layer.split("_")
+          tickedObj.push({mapServiceIndex: layerInfo[1] , id: layerInfo[0], type: type})
       })
       this.$store.commit('updateTreeState', {ticked: tickedObj, expanded: this.expanded})
     }
