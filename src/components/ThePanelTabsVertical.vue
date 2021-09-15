@@ -36,7 +36,7 @@
           </q-tab-panel>
 
           <q-tab-panel name="supporting" class="q-pr-none">
-            <q-scroll-area class="panel" :thumb-style="{ width: '7px'}">
+            <q-scroll-area id="panelM" class="panel" :thumb-style="{ width: '7px'}">
               <div class="q-mr-lg" v-if="$store.state.data.slReady">
                 <SupportingLayers displayClass="supportingLayersPanel"/>
               </div>

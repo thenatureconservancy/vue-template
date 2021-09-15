@@ -1,7 +1,7 @@
 <template>
  
     <div v-if="$store.state.data.slReady">
-      <q-scroll-area class="panel q-pa-md" :thumb-style="{ width: '7px'}">
+      <q-scroll-area id="panelM" class="panel q-pa-md" :thumb-style="{ width: '7px'}">
         <div class="q-pr-lg" v-if="$store.state.data.slReady">
           <SupportingLayers displayClass="supportingLayersPanel"/>
         </div>

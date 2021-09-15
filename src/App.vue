@@ -6,6 +6,7 @@
       unit="px"
       separator-class="bg-primary"
       horizontal
+      @update:model-value="updateScrollContainerHeight($event)"
     >
       <template v-slot:after v-if="smallScreen" >
         <!--PANEL COMPONENT-->
@@ -79,6 +80,12 @@ export default {
   mounted() {
     // create data store for the app
     this.$store.dispatch('requestSupportingLayers')
+  },
+  methods:{
+    updateScrollContainerHeight(value){
+      let newVal = value + 150
+      document.getElementById('panelM').style.height = 'calc(100vh - ' + newVal  + 'px)' 
+    }
   }
 }
 </script>
