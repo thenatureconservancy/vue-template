@@ -223,19 +223,61 @@ export default {
     },
 
     updateSupportingOpacity(){
+      let l = this.supportingVisibleLayerOpacity
+      // if it is a raster find the sublayer and set the opacity
+      if (l.type === 'Raster Layer'){
+           let i = esri.map.layers.items.findIndex( layer => layer.type == 'map-image' && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService)
+           let si = esri.map.layers.items[i].sublayers.items.findIndex( sublayer => sublayer.id == l.id)
+           esri.map.layers.items[i].sublayers.items[si].opacity = l.value
+      }
+      //if it is a feature layers, create it if it does not exist but make visibility false.  then set its opacity so that 
+      //when the user turns it on, it will find the layer and match the ui opacity dial. 
+      if (l.type == 'Feature Layer'){
+           let i = esri.map.layers.items.findIndex( layer => layer.layerId == l.id && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService)
+        
+          if(i >=0 ){
+              console.log('finds feature layer')
+              esri.map.layers.items[i].visible = true
+            }
+          else{
+            //check to see if fl has a popup template defined
+            console.log('creates feature layer')
+            let layerList = this.$store.state.config.supportingMapLayers[l.mapServiceIndex].popupTemplate
+            let i = layerList.findIndex(layer => layer.id == l.id)
+            if (i >= 0){
+              let template = {
+                  title: layerList[i].title,
+                  content: [
+                    {
+                      type: "text",
+                      text: layerList[i].label + ":  <b>{ " + layerList[i].field + "}</b>" 
+                    },
+                  ] 
+                }
+              //get index of map server
+              esri.map.add( new FeatureLayer({
+                url: this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService + "/" + l.id,  
+                popupTemplate: template,
+                visible: false,
+                opacity: l.value
+              }))
+            }
+            //if no popup defined create the feature layer without popup
+            else{
+              esri.map.add( new FeatureLayer({
+                url: this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService + "/" + l.id,  
+                visible: false,
+                opacity: l.value
+              }))
+            }
+          }
+
+      }
       //find the layer in the list of sublayers and update its opacity
-      let sublayer = esri.supportingMapLayer.findSublayerById(this.supportingVisibleLayerOpacity.id);
-      sublayer.opacity = this.supportingVisibleLayerOpacity.value
+      //let sublayer = esri.supportingMapLayer.findSublayerById(this.supportingVisibleLayerOpacity.id);
+      //sublayer.opacity = this.supportingVisibleLayerOpacity.value
     },
 
-  /* remove this function and associated variables 
-    addSupportingLayers(){
-      //add all raster layers to the map with visibility false
-      //this method only gets run once when the map is loaded
-      //esri.supportingMapLayer.sublayers = this.supportingSublayerList
-      //console.log( esri.supportingMapLayer.sublayers)
-      console.log('doing nothing')
-    },*/
 
     activateAreaMeasurement(){
       const distanceButton = document.getElementById("distance")
