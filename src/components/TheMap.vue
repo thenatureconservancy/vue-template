@@ -273,9 +273,6 @@ export default {
           }
 
       }
-      //find the layer in the list of sublayers and update its opacity
-      //let sublayer = esri.supportingMapLayer.findSublayerById(this.supportingVisibleLayerOpacity.id);
-      //sublayer.opacity = this.supportingVisibleLayerOpacity.value
     },
 
 
