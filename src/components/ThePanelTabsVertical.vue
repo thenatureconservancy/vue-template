@@ -78,7 +78,7 @@ export default {
 
   @media screen and (max-width: 700px){
     .panel{
-      height: 50vh;
+       height: 230px;
     }
 }
 </style>

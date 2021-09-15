@@ -59,6 +59,9 @@ export default {
 
 @media screen and (max-width: 700px){
  
+   .q-splitter__before, .q-splitter__after {
+      overflow: hidden !important;
+    }
    .esri-view-width-xsmall .esri-expand--auto .esri-expand__mask--expanded {
     display: none;
    }
