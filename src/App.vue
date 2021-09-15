@@ -1,12 +1,11 @@
 <template>
   <the-header></the-header>
-   <div id="mobile">
+   <div id="mobile" v-if="smallScreen">
     <q-splitter
       v-model="splitterModel"
       unit="px"
       separator-class="bg-primary"
       :horizontal="smallScreen"
-     
     >
       <template v-slot:after v-if="smallScreen" >
         <!--PANEL COMPONENT-->
@@ -21,11 +20,9 @@
           <!--MAP COMPONENT-->
           <the-map></the-map>
       </template>
-
     </q-splitter>
- 
-    </div>
-  <div id="">
+  </div>
+  <div id="desktop" v-if="!smallScreen">
       <q-splitter
       v-model="splitterModel"
       unit="px"
