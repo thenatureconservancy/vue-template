@@ -14,7 +14,9 @@
             <the-panel-tabs-horizontal v-if="$store.state.config.panelDisplayType=='tabsHorizontal'"></the-panel-tabs-horizontal>
             <the-panel-tabs-vertcial v-if="$store.state.config.panelDisplayType=='tabsVertical'"></the-panel-tabs-vertcial>
       </template>
-
+      <template v-slot:separator>
+        <q-avatar draggable="false" color="primary" text-color="white" size="20px" icon="drag_indicator" />
+      </template>
       <template v-slot:after>
           <!--MAP COMPONENT-->
           <the-map></the-map>
