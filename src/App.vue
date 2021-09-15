@@ -5,7 +5,7 @@
       v-model="splitterModel"
       unit="px"
       separator-class="bg-primary"
-      :horizontal="smallScreen"
+      horizontal
     >
       <template v-slot:after v-if="smallScreen" >
         <!--PANEL COMPONENT-->
@@ -27,8 +27,7 @@
       v-model="splitterModel"
       unit="px"
       separator-class="bg-primary"
-      :horizontal="smallScreen"
-     
+    
     >
       <template v-slot:before >
         <!--PANEL COMPONENT-->
@@ -68,10 +67,14 @@ export default {
   data(){
     return{
      splitterModel: 400,
-     smallScreen: this.$q.screen.lt.sm ? true : false,
      panelScreenSize:  'v-slot:before'
     }
       
+  },
+  computed:{
+    smallScreen(){
+      return this.$q.screen.lt.sm
+    }
   },
   mounted() {
     // create data store for the app
