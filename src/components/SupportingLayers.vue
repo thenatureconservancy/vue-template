@@ -47,7 +47,7 @@
        
           <div class='row items-left q-pa-sm'>
             <div class="col-1"><q-icon color="secondary" name="opacity" size="xs" /></div>
-            <div class="col-11 q-pr-xl"><q-slider  color="secondary" snap dense @change="setTransparency($event, prop.node.id)" :min="0" :max="1" :step=".1" :model-value="1" label /></div>
+            <div class="col-11 q-pr-xl"><q-slider  color="secondary" snap dense @change="setTransparency($event, prop.node.id, prop.node.type)" :min="0" :max="1" :step=".1" :model-value="1" label /></div>
           </div>
         </q-card>
       </q-expansion-item>
@@ -95,9 +95,9 @@ export default {
     }
   },
   methods: {
-    setTransparency(value,id){
-      console.log('set transparency')
-      let layerObj = {value: value, id: id}
+    setTransparency(value,id,type){
+      let layerInfo = id.split("_")
+      let layerObj = {value: value, id: layerInfo[0], mapServiceIndex: layerInfo[1], type: type}
       this.$store.commit('updateSupportingLayerVisibleOpacity', layerObj)
     },
     resetFilter () {
