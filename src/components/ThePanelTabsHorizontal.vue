@@ -33,7 +33,7 @@
               </div>
           </q-tab-panel>
           <q-tab-panel name="supporting" class="q-pr-none">
-            <q-scroll-area class="panel" :thumb-style="{ width: '7px'}">
+            <q-scroll-area id="panelM" class="panel" :thumb-style="{ width: '7px'}">
               <div class="q-mr-lg" v-if="$store.state.data.slReady">
                 <SupportingLayers displayClass="supportingLayersPanel"/>
               </div>
@@ -72,7 +72,7 @@ export default {
 
   @media screen and (max-width: 700px){
     .panel{
-      min-height: 230px;
+      height: calc(100vh - 520px);
     }
 }
 </style>
