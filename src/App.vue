@@ -1,9 +1,26 @@
 <template>
   <the-header></the-header>
-  <div id="panel-map-wrap">
-      <the-side-nav></the-side-nav>
-      <the-map-toggle></the-map-toggle>
-      <the-map></the-map>
+  <div id="">
+      <q-splitter
+      v-model="splitterModel"
+      unit="px"
+      separator-class="bg-primary"
+      :horizontal="smallScreen"
+    >
+
+      <template v-slot:before>
+            <!--PANEL COMPONENT-->
+            <the-panel v-if="$store.state.config.panelDisplayType=='plain'"></the-panel>
+            <the-panel-tabs-horizontal v-if="$store.state.config.panelDisplayType=='tabsHorizontal'"></the-panel-tabs-horizontal>
+            <the-panel-tabs-vertcial v-if="$store.state.config.panelDisplayType=='tabsVertical'"></the-panel-tabs-vertcial>
+      </template>
+
+      <template v-slot:after>
+          <!--MAP COMPONENT-->
+          <the-map></the-map>
+      </template>
+
+    </q-splitter>
   </div>
 
 
@@ -14,17 +31,20 @@
      
 import TheMap from './components/TheMap.vue'
 import TheHeader from './components/UI/TheHeader.vue'
-import TheMapToggle from './components/UI/TheMapToggle.vue'
-import TheSideNav from './components/UI/TheSideNav.vue'
+import ThePanel from './components/ThePanel.vue'
+import ThePanelTabsHorizontal from './components/ThePanelTabsHorizontal.vue'
+import ThePanelTabsVertcial from './components/ThePanelTabsVertical.vue'
 
 export default {
   name: 'App',
   components: {
-    TheMap, TheHeader, TheMapToggle, TheSideNav
+    TheMap, TheHeader, ThePanel, ThePanelTabsVertcial, ThePanelTabsHorizontal
+    //TheMapToggle, TheSideNav
   },
   data(){
     return{
-     
+     splitterModel: this.$q.screen.lt.sm ? 300 : 400,
+     smallScreen: this.$q.screen.lt.sm ? true : false
     }
       
   },
@@ -36,24 +56,9 @@ export default {
 </script>
 
 <style>
-#panel-map-wrap{
-    display: flex;
-    flex-direction: row;
-    height: calc(100vh - 49px);
-    width: 100vw;
-}
+
 @media screen and (max-width: 700px){
-  #panel-map-wrap {
-    flex-direction: column-reverse;
-    width: 100vw;
-  }
-  #side-nav{
-    width:100%;
-    height: 45%;
-   }
-   #map-div{
-    height:55%;
-   }
+ 
    .esri-view-width-xsmall .esri-expand--auto .esri-expand__mask--expanded {
     display: none;
    }

@@ -6,13 +6,13 @@ export default createStore({
     data: {
       // data retrieved from web services
       supportingLayers: '',  //used to create the supportinglayer tree
-      supportingSublayerList: [] //used to add all layers to the map
+      slReady: false
     },
     config: {
       // config info 
-      supportingMapLayers: [{ mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Florida/Florida_Keys/MapServer',
+      supportingMapLayers: [{ mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
                               skipLayers: [],
-                              title: "Florida",
+                              title: "MA",
                               popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: '1'}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: '2'}]
                            },
                            {  mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Washington/Skagit/MapServer',
@@ -24,10 +24,10 @@ export default createStore({
       supportingLayersTitle: 'Supporting Layers',
       supportingLayersOnMap: true,
       supportingLayersInPanel: true,
-      panelDisplayType: "tabsVertical" //plain, tabsHorizontal, tabsVertical
+      panelDisplayType: "tabsHorizontal" //plain, tabsHorizontal, tabsVertical
     },
       // app state info -- supporting layers
-      tree: {ticked:[], expanded:[]}, 
+      tree: {ticked:[], expanded:[], tickedObj: []}, 
       selectedLayerList: [],
       supportingVisibleLayerOpacity: {},
 
@@ -40,6 +40,9 @@ export default createStore({
     updateSupportingLayers(state, obj){
       state.data.supportingLayers = obj
     },
+    updateSLReady(state, bool){
+      state.data.slReady = bool
+    },
     updateSupportingSublayerList(state, obj){
       state.data.supportingSublayerList = obj
     },
@@ -48,6 +51,7 @@ export default createStore({
     updateTreeState(state, obj){
       state.tree.ticked = obj.ticked
       state.tree.expanded = obj.expanded
+      state.tree.tickedObj = obj.tickedObj
     },
     updateSupportingLayerVisibleOpacity(state, obj){
       state.supportingVisibleLayerOpacity = obj
@@ -60,12 +64,14 @@ export default createStore({
     requestSupportingLayers(context){
       //for each map service object in supporting map layers
       let obj = []
+      let smnum = context.state.config.supportingMapLayers.length
+      let smcount = 0
       context.state.config.supportingMapLayers.forEach((service, index) => {  
         esriRequest(service.mapService + "/layers?f=pjson", {responseType: "json"}).then(function (response) {
         let layerJson = response.data.layers
+        //push main header to the object
         obj.push({label: service.title, children: [], id: 999 + index, noTick: true, type: 'header'})
         let storeNodes = []
-        let supportingSublayerList = []
 
         layerJson.forEach((l) => {
           // add layer to layer viewer if it's id is not present in the skip array
@@ -85,10 +91,8 @@ export default createStore({
                     let nodesIndex = storeNodes.findIndex(( obj => obj.parentId == l.parentLayer.id + "_" + index)) 
                     //set the location of the parent
                     let parentLoc = storeNodes[nodesIndex].parentLoc 
-                    
                     //push the child to the parent            
                     parentLoc.children.push({label: l.name, children: [], body: 'toggle', id: l.id + "_" + index, description: l.description, type: l.type})
-                    supportingSublayerList.push({id:l.id + "_" + index, visible:false, opacity: 1})
               }
               // group layer with parent
              if (l.type == "Group Layer" && l.parentLayer){
@@ -97,7 +101,6 @@ export default createStore({
                 //set the location of the parent
                 let parentLoc = storeNodes[nodesIndex].parentLoc 
                 //push the new parent into the found parent as child
-               
                 parentLoc.children.push({label: l.name, children: [], id: l.id + "_" + index, noTick: true, type: l.type})
                 //find the index of the child we just pushed
                 let parentIndex = parentLoc.children.findIndex(( obj => obj.id == l.id + "_" + index))   
@@ -109,17 +112,19 @@ export default createStore({
               // feature layer with no parent length = number of nodes
               if (l.type !== "Group Layer" && !l.parentLayer){
                   obj[index].children.push({label: l.name, children: [], body: 'toggle', id: l.id + "_" + index, description: l.description, type: l.type})
-                  supportingSublayerList.push({id:l.id + "_" + index, visible:false, opacity: 1})
               }
             }
-          })
-          //context.commit('updateSupportingSublayerList', supportingSublayerList)
-          
+         })
+         smcount = smcount + 1
+         console.log(smcount)
+         console.log(smnum)
+         if (smcount == smnum){
+          context.commit('updateSupportingLayers', obj)
+          context.commit('updateSLReady', true)
+         }
       })
- 
-    })
-    context.commit('updateSupportingLayers', obj)
- 
+     })
+    
   }
   
   },

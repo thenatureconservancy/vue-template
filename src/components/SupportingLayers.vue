@@ -1,5 +1,5 @@
 <template>
-  <div :class="displayClass" v-if="$store.state.data.supportingLayers" @click.stop @keypress.stop >
+  <div :class="displayClass"  @click.stop @keypress.stop v-if="$store.state.data.slReady" >
     <p class="text-subtitle2 text-primary q-mb-none"> {{$store.state.config.supportingLayersTitle}}</p>
     <p>Use the search to filter layers or expand the contents to browse</p>
      <q-input ref="filterRef" class="q-mb-md" outlined dense v-model="filter" label="Begin typing to filter layers">
@@ -28,18 +28,23 @@
       
     <template v-slot:body-toggle="prop">
     
-    <div class="q-pa-none" style="max-width: 350px">
+    <div class="q-pa-none">
       <q-list class="">
       <q-expansion-item
+        expand-icon-toggle
         dense
         dense-toggle
-        icon=""
         label=""
         header-class="text-secondary"
         id="expandMore"
       >
-        <q-card class="q-ma-none q-pa-none">
-          <p class="q-mb-none">{{prop.node.description}} </p>
+        <q-card class="">
+            <q-scroll-area v-if="prop.node.description" style="height:150px" :thumb-style="{background: 'var(--q-secondary)', width: '4px'}" >
+             <div class="q-mr-md">
+              {{prop.node.description}}
+             </div>
+            </q-scroll-area>
+       
           <div class='row items-left q-pa-sm'>
             <div class="col-1"><q-icon color="secondary" name="opacity" size="xs" /></div>
             <div class="col-11 q-pr-xl"><q-slider  color="secondary" snap dense @change="setTransparency($event, prop.node.id)" :min="0" :max="1" :step=".1" :model-value="1" label /></div>
@@ -56,7 +61,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+
 
 export default {
   name: 'SupportingLayers',
@@ -69,26 +74,12 @@ export default {
         expanded: this.$store.state.tree.expanded,
         showDialog_0: false,
         showDialog_24: false,
-        showDialog_29: false
+        showDialog_29: false,
+        filter: '',
+        filterRef: null
       }
     },
   props:   ['displayClass'],  
-
-  setup () {
-    //TODO: this is the setup for the filter.  I think this can be moved to data obj. 
-    const filter = ref('')
-    const filterRef = ref(null)
-    return {
-      filter,
-      filterRef,
-      resetFilter () {
-        filter.value = ''
-        filterRef.value.focus()
-      },
-
-      
-    }
-  },
 
   watch: {
     ticked: function(){    
@@ -100,7 +91,7 @@ export default {
           let layerInfo = layer.split("_")
           tickedObj.push({mapServiceIndex: layerInfo[1] , id: layerInfo[0], type: type})
       })
-      this.$store.commit('updateTreeState', {ticked: tickedObj, expanded: this.expanded})
+      this.$store.commit('updateTreeState', {tickedObj: tickedObj, ticked: this.ticked, expanded: this.expanded})
     }
   },
   methods: {
@@ -109,6 +100,10 @@ export default {
       let layerObj = {value: value, id: id}
       this.$store.commit('updateSupportingLayerVisibleOpacity', layerObj)
     },
+    resetFilter () {
+        this.filter = ''
+        this.filterRef.focus()
+      },
   }
 }
 </script>
@@ -125,9 +120,9 @@ export default {
 }
 
 .supportingLayersPanel{
-  max-width: 370px;
   padding: 10px;
 }
+
 
 </style>
 <style>

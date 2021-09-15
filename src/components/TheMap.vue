@@ -49,22 +49,18 @@ export default {
   },
   data() {
     return{
-      active: true
+      active: true,
     }
   },
   computed: {
     supportingMapVisibleLayers(){
       //returns list of all ticked objects [{mapService: index in config, id: layerid, type: type}, ...]
-      return this.$store.state.tree.ticked
+      return this.$store.state.tree.tickedObj
     },
     supportingVisibleLayerOpacity(){
       //returns object {value: OpacVal, id: Layerid}
       return this.$store.state.supportingVisibleLayerOpacity
     },
-    supportingSublayerList(){
-      //returns list of objects [{id:l.id, visible:false, opacity: 1},]
-       return this.$store.state.data.supportingSublayerList
-    }
     
   },
   watch:{
@@ -74,9 +70,7 @@ export default {
     supportingVisibleLayerOpacity(){
       this.updateSupportingOpacity()
     },
-    supportingSublayerList(){
-      this.addSupportingLayers()
-    }
+
 
   },
  
@@ -170,10 +164,6 @@ export default {
    
     updateSupportingVisibility(){
       // turn off all raster layer visibility
-      //esri.supportingMapLayer.sublayers.forEach((sl) => {
-      //   sl.visible = false
-      // })
-      //turn off all feature layer visibility //add rasters to this
       esri.map.layers.items.forEach((fl) => {
         if (fl.type === 'feature'){
           fl.visible = false
@@ -282,7 +272,8 @@ export default {
 
 #map{
   flex: 1;
-  min-height: 40vh;
+  min-height: calc(100vh - 49px);
+  height: 100%;
   width: 100%;
   position: relative;
   border-bottom: #999 solid 1pt;
