@@ -318,6 +318,17 @@ export default {
   border-bottom: #999 solid 1pt;
 }
 
+ @media screen and (max-width: 700px){
+    #map{
+      min-height: 20vh;
+        height: 100%;
+        width: 100%;
+        position: relative;
+        border-bottom: #999 solid 1pt;
+    }
+  
+}
+
 #toolbarDiv {
   position: absolute;
   left: 10px;
