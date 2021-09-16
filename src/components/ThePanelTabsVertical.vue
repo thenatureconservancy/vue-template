@@ -80,7 +80,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .panel{
-    height: calc(100vh - 90px);
+    height: calc(100vh - 100px);
   }
 
   @media screen and (max-width: 700px){

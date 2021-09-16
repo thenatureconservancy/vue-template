@@ -84,8 +84,8 @@ export default {
     const mapView = new MapView({
       map: esri.map,
       //center: [-70.99501567725498, 42.310350073610834],
-      center: [-122.506479,48.370655],
-      zoom: 11,
+      center: [-76.62437061849212,9.069409582028836],
+      zoom: 4,
       container: this.$el
     })
 
