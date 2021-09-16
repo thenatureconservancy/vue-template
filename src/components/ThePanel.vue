@@ -1,6 +1,13 @@
 <template>
  
     <div v-if="$store.state.data.slReady">
+       <div v-if="!$store.state.data.slReady">
+        <q-spinner-ball
+          color="primary"
+          size="2em"
+        />
+        <q-tooltip :offset="[0, 8]">QSpinnerBall</q-tooltip>
+      </div>
       <q-scroll-area id="panelM" class="panel q-pa-md" :thumb-style="{ width: '7px'}">
         <div class="q-pr-lg" v-if="$store.state.data.slReady">
           <SupportingLayers displayClass="supportingLayersPanel"/>

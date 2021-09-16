@@ -12,19 +12,19 @@ export default createStore({
       // config info 
       supportingMapLayers: [{ mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Caribbean/Caribbean/MapServer',
                               skipLayers: [],
-                              title: "CA Disadvantaged Communities",
+                              title: "Caribbean",
                               popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: ''}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: ''}]
                            },
                            {  mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Global/Global/MapServer',
                               skipLayers: [],
-                              title: "Flood",
+                              title: "global",
                               popupTemplate: [{title: 'Flood Slr', field: 'NAME', label:'Watershed Name', id: ''}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: ''}]
                            }],
                               
       supportingLayersTitle: 'Supporting Layers',
       supportingLayersOnMap: true,
       supportingLayersInPanel: true,
-      panelDisplayType: "tabsHorizontal" //plain, tabsHorizontal, tabsVertical
+      panelDisplayType: "tabsVertical" //plain, tabsHorizontal, tabsVertical
     },
       // app state info -- supporting layers
       tree: {ticked:[], expanded:[], tickedObj: []}, 
