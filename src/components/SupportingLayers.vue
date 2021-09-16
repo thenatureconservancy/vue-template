@@ -1,5 +1,5 @@
 <template>
-  <div :class="displayClass"  @click.stop @keypress.stop v-if="$store.state.data.slReady" >
+  <div :class="displayClass"  @click.stop @keypress.stop>
     <p class="text-subtitle2 text-primary q-mb-none"> {{$store.state.config.supportingLayersTitle}}</p>
     <p>Use the search to filter layers or expand the contents to browse</p>
      <q-input ref="filterRef" class="q-mb-md" outlined dense v-model="filter" label="Begin typing to filter layers">
@@ -7,7 +7,9 @@
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
+     
     <q-tree
+    v-if="$store.state.data.slReady"
       ref="tree"
       :nodes="$store.state.data.supportingLayers"
       node-key="id"

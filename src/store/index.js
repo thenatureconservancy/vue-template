@@ -10,15 +10,15 @@ export default createStore({
     },
     config: {
       // config info 
-      supportingMapLayers: [{ mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Massachusetts/Massachusetts/MapServer',
+      supportingMapLayers: [{ mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Caribbean/Caribbean/MapServer',
                               skipLayers: [],
-                              title: "MA",
-                              popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: '1'}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: '2'}]
+                              title: "CA Disadvantaged Communities",
+                              popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: ''}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: ''}]
                            },
-                           {  mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Washington/Skagit/MapServer',
+                           {  mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Global/Global/MapServer',
                               skipLayers: [],
-                              title: "Skagit",
-                              popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: '1'}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: '2'}]
+                              title: "Flood",
+                              popupTemplate: [{title: 'Flood Slr', field: 'NAME', label:'Watershed Name', id: ''}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: ''}]
                            }],
                               
       supportingLayersTitle: 'Supporting Layers',
