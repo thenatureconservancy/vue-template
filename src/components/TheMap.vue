@@ -237,7 +237,7 @@ export default {
         
           if(i >=0 ){
               console.log('finds feature layer')
-              esri.map.layers.items[i].visible = true
+              esri.map.layers.items[i].opacity = l.value
             }
           else{
             //check to see if fl has a popup template defined
