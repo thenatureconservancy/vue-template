@@ -1,4 +1,4 @@
-# washington-skagit
+# vue-template-routing
 
 ## Project setup
 ```

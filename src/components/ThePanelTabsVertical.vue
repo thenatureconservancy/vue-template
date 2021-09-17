@@ -17,10 +17,9 @@
           active-color="primary"
           indicator-color="primary"
         >
-          
-          <q-tab name="supporting" label="Layers" icon="layers"/>
-          <q-tab name="panel1" label="Panel 1" icon="description"/>
-          <q-tab name="panel2" label="Panel 2" icon="info" />
+          <q-route-tab to="/" name="supporting" label="Layers" icon="layers"/>
+          <q-route-tab to="/panel1" name="panel1" label="Panel 1" icon="description"/>
+          <q-route-tab to="/panel2" name="panel2" label="Panel 2" icon="info" />
         </q-tabs>
        </template>
 
