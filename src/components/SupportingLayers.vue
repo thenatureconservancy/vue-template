@@ -84,19 +84,20 @@ export default {
     },
   props:   ['displayClass'],  
   computed: {
-    dataStore(){
+    slReady(){
       //returns list of all ticked objects [{mapService: index in config, id: layerid, type: type}, ...]
       return this.$store.state.data.slReady
     }
   },
   mounted() {
-    if (this.dataStore){
+    console.log(this.showTree)
+    if (this.slReady){
       this.showTree = true
     }
   },
 
   watch: {
-    ticked: function(){    
+    ticked(){    
       //get type and create ticked object with layer id and layer type to retrieve in map
       let tickedObj = []
       this.ticked.forEach((layer) => {
@@ -107,8 +108,8 @@ export default {
       })
       this.$store.commit('updateTreeState', {tickedObj: tickedObj, ticked: this.ticked, expanded: this.expanded})
     },
-    dataStore: function(){
-      if (this.dataStore){
+    slReady(){
+      if (this.slReady){
         this.showTree = true
       }
     }
