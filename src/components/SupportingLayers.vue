@@ -7,9 +7,8 @@
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
-     
+    <div v-if="showTree">
     <q-tree
-    v-if="$store.state.data.slReady"
       ref="tree"
       :nodes="$store.state.data.supportingLayers"
       node-key="id"
@@ -58,6 +57,7 @@
     
     </template>
     </q-tree>
+    </div>
   </div>
 
 </template>
@@ -78,10 +78,22 @@ export default {
         showDialog_24: false,
         showDialog_29: false,
         filter: '',
-        filterRef: null
+        filterRef: null,
+        showTree: false
       }
     },
   props:   ['displayClass'],  
+  computed: {
+    dataStore(){
+      //returns list of all ticked objects [{mapService: index in config, id: layerid, type: type}, ...]
+      return this.$store.state.data.slReady
+    }
+  },
+  mounted() {
+    if (this.dataStore){
+      this.showTree = true
+    }
+  },
 
   watch: {
     ticked: function(){    
@@ -94,6 +106,11 @@ export default {
           tickedObj.push({mapServiceIndex: layerInfo[1] , id: layerInfo[0], type: type})
       })
       this.$store.commit('updateTreeState', {tickedObj: tickedObj, ticked: this.ticked, expanded: this.expanded})
+    },
+    dataStore: function(){
+      if (this.dataStore){
+        this.showTree = true
+      }
     }
   },
   methods: {
