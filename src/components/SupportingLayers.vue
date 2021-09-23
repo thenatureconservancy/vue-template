@@ -90,11 +90,13 @@ export default {
     }
   },
   created() {
-    console.log(this.showTree)
-    this.$store.dispatch('requestSupportingLayers')
     if (this.slReady){
+      console.log('says its ready on created')
       this.treeData = this.$store.state.data.supportingLayers
       this.showTree = true
+    }
+    else{
+      this.$store.dispatch('requestSupportingLayers')
     }
   },
 
