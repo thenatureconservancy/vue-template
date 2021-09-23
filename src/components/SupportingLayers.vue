@@ -10,7 +10,7 @@
     <div v-if="showTree">
     <q-tree
       ref="tree"
-      :nodes="$store.state.data.supportingLayers"
+      :nodes="treeData"
       node-key="id"
       tick-strategy="leaf"
       v-model:ticked="ticked"
@@ -79,19 +79,21 @@ export default {
         showDialog_29: false,
         filter: '',
         filterRef: null,
-        showTree: false
+        showTree: false,
+        treeData: []
       }
     },
   props:   ['displayClass'],  
   computed: {
     slReady(){
-      //returns list of all ticked objects [{mapService: index in config, id: layerid, type: type}, ...]
       return this.$store.state.data.slReady
     }
   },
-  mounted() {
+  created() {
     console.log(this.showTree)
+    this.$store.dispatch('requestSupportingLayers')
     if (this.slReady){
+      this.treeData = this.$store.state.data.supportingLayers
       this.showTree = true
     }
   },
@@ -110,6 +112,7 @@ export default {
     },
     slReady(){
       if (this.slReady){
+        this.treeData = this.$store.state.data.supportingLayers
         this.showTree = true
       }
     }

@@ -79,7 +79,7 @@ export default {
   },
   mounted() {
     // create data store for the app
-    this.$store.dispatch('requestSupportingLayers')
+   
   },
   methods:{
     updateScrollContainerHeight(value){
