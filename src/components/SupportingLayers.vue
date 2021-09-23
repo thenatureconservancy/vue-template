@@ -7,6 +7,7 @@
         <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
       </template>
     </q-input>
+    <div v-if="showError">There was an error fetching the services.  Please reload.</div>
     <div v-if="showTree">
     <q-tree
       ref="tree"
@@ -80,6 +81,7 @@ export default {
         filter: '',
         filterRef: null,
         showTree: false,
+        showError: false,
         treeData: []
       }
     },
@@ -92,8 +94,13 @@ export default {
   created() {
     if (this.slReady){
       console.log('says its ready on created')
+      if (this.$store.state.data.supportingLayers !== 'error'){
       this.treeData = this.$store.state.data.supportingLayers
       this.showTree = true
+      }
+      else{
+        this.showError = true
+      }
     }
  
   },

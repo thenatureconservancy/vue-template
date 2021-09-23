@@ -63,6 +63,7 @@ export default createStore({
   
     requestSupportingLayers(context){
       //for each map service object in supporting map layers
+      try{
       let obj = []
       let smnum = context.state.config.supportingMapLayers.length
       let smcount = 0
@@ -78,7 +79,7 @@ export default createStore({
           if (service.skipLayers.indexOf(l.id) == -1){
               // Group Layer with no parent
              if (l.type == "Group Layer" && !l.parentLayer){
-                //push the object to the list as child of main header
+                       //push the object to the list as child of main header
                 obj[index].children.push({label: l.name, children: [], id: l.id + "_" + index, noTick: true, type: l.type})
                 //find the index of the object we just pushed, saves the reference to the location
                 let parentIndex = obj[index].children.findIndex(( obj => obj.id  == l.id + "_" + index))
@@ -123,8 +124,11 @@ export default createStore({
           context.commit('updateSLReady', true)
          }
       })
-     })
-    
+      })
+      }
+      catch(error){
+        context.commit('updateSupportingLayers','error')
+      }
   }
   
   },
