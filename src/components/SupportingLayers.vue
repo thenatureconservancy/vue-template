@@ -95,9 +95,7 @@ export default {
       this.treeData = this.$store.state.data.supportingLayers
       this.showTree = true
     }
-    else{
-      this.$store.dispatch('requestSupportingLayers')
-    }
+ 
   },
 
   watch: {
