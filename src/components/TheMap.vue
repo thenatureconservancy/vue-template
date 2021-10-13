@@ -90,10 +90,22 @@ export default {
     })
 
     //add supporting map layers listed in config
-    this.$store.state.config.supportingMapLayers.forEach((service) => {  
-      esri.map.add( new MapImageLayer({
+     this.$store.state.config.supportingMapLayers.forEach((service) => {  
+     let l = new MapImageLayer({
         url: service.mapService,
-      }))
+      })
+      esri.map.add(l)
+      l.when(function(){
+        //create sublayer list
+        let sublayerList= []
+        let layer = esri.map.layers.items.find((layer)=>{
+          return layer.type == 'map-image' && layer.url == service.mapService
+        })
+        layer.allSublayers.items.forEach((sublayer)=>{
+          sublayerList.push({id: sublayer.id, visible: false, opacity: 1})
+        })
+        l.sublayers = sublayerList
+      })
     })
 
     //add supporting layers widget to map if true
@@ -129,6 +141,15 @@ export default {
     // show expanded legend on desktop, collapse on mobile
     this.$q.screen.lt.sm || this.$q.screen.lt.md ? true : esri.lgExpand.expand()
     
+     //watch size of map view and adjust legend to close if map gets too small
+    mapView.on("resize", function(event){
+      if (event.width < 546){
+        esri.lgExpand.collapse()
+      }
+      if (event.width > 546){
+        esri.lgExpand.expand()
+      }
+    })
 
     // basemaps
     const allowedBasemapTitles = ["Topographic", "Imagery Hybrid", "Streets"]
@@ -169,8 +190,10 @@ export default {
           fl.visible = false
         }
         if (fl.type == 'map-image'){
-          fl.sublayers.items.forEach((sl) => {
-            sl.visible = false
+           fl.allSublayers.items.forEach((sl) => {
+            if (sl.layer.type == 'map-image'){
+              sl.visible = false
+            }
           })
         }
       })
@@ -178,9 +201,13 @@ export default {
       this.supportingMapVisibleLayers.forEach((l) => {
         //if type is raster layer - find the sublayer and make visible
         if (l.type === 'Raster Layer'){
-           let i = esri.map.layers.items.findIndex( layer => layer.type == 'map-image' && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService)
-           let si = esri.map.layers.items[i].sublayers.items.findIndex( sublayer => sublayer.id == l.id)
-           esri.map.layers.items[i].sublayers.items[si].visible = true
+            let layer = esri.map.layers.items.find( (layer)=>{
+             return layer.type == 'map-image' && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService
+           })
+            let sublayer = layer.allSublayers.items.find((sublayer)=>{
+            return sublayer.id == l.id
+           })
+           sublayer.visible = true
         }
         if (l.type === 'Feature Layer'){
           //check to see if feature layer exists.  if it does make it visible, if not create it.
@@ -226,9 +253,13 @@ export default {
       let l = this.supportingVisibleLayerOpacity
       // if it is a raster find the sublayer and set the opacity
       if (l.type === 'Raster Layer'){
-           let i = esri.map.layers.items.findIndex( layer => layer.type == 'map-image' && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService)
-           let si = esri.map.layers.items[i].sublayers.items.findIndex( sublayer => sublayer.id == l.id)
-           esri.map.layers.items[i].sublayers.items[si].opacity = l.value
+           let layer = esri.map.layers.items.find( (layer)=>{
+             return layer.type == 'map-image' && layer.url == this.$store.state.config.supportingMapLayers[l.mapServiceIndex].mapService
+           })
+          let sublayer = layer.allSublayers.items.find((sublayer)=>{
+            return sublayer.id == l.id
+           })
+           sublayer.opacity = l.value
       }
       //if it is a feature layers, create it if it does not exist but make visibility false.  then set its opacity so that 
       //when the user turns it on, it will find the layer and match the ui opacity dial. 

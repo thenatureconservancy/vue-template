@@ -24,7 +24,7 @@ export default createStore({
       supportingLayersTitle: 'Supporting Layers',
       supportingLayersOnMap: true,
       supportingLayersInPanel: true,
-      panelDisplayType: "tabsVertical" //plain, tabsHorizontal, tabsVertical
+      panelDisplayType: "tabsHorizontal" //plain, tabsHorizontal, tabsVertical
     },
       // app state info -- supporting layers
       tree: {ticked:[], expanded:[], tickedObj: []}, 
