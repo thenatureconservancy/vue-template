@@ -81,7 +81,6 @@ export default {
         filter: '',
         filterRef: null,
         showTree: false,
-        showError: false,
         treeData: []
       }
     },
@@ -93,16 +92,13 @@ export default {
   },
   created() {
     if (this.slReady){
-      console.log('says its ready on created')
-      if (this.$store.state.data.supportingLayers !== 'error'){
       this.treeData = this.$store.state.data.supportingLayers
       this.showTree = true
       }
       else{
-        this.showError = true
+        this.$store.dispatch('requestSupportingLayers')
       }
-    }
- 
+     
   },
 
   watch: {
