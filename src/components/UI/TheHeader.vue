@@ -1,7 +1,7 @@
 <template>
   <header> 
     <span>App Title</span>
-    <div><q-btn @click="showHelp=true; step=3" padding="none" color="white" flat icon="help"  /></div>
+    <div><q-btn id="helpButton" @click="showHelp=true; step=3" padding="none" color="white" flat icon="help"  /></div>
    
   </header>
 
@@ -61,6 +61,10 @@ export default {
       white-space: wrap; 
       text-overflow: ellipsis;
     }
+
+    header button{
+      font-size: 15px;
+    }
     
     .minHeight{
       min-height: 200px;
@@ -76,7 +80,7 @@ export default {
       }
      header{
       background: var(--q-primary);
-      height: 50px;
+      height: 30px;
       color: #fff;
       font-size: 14px;
       padding: 5px 10px;
@@ -84,6 +88,9 @@ export default {
       position: relative;
       z-index: 10;
       display: flex;
+    }
+    header button{
+      font-size: 12px;
     }
     .selected{
       color: #8c9fb9

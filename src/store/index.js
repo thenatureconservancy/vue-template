@@ -11,7 +11,7 @@ export default createStore({
     config: {
       // config info 
       supportingMapLayers: [{ mapService: 'https://services2.coastalresilience.org/arcgis/rest/services/Caribbean/Caribbean/MapServer',
-                              skipLayers: [],
+                              skipLayers: [0],
                               title: "Caribbean",
                               popupTemplate: [{title: 'Watershed Boundary', field: 'NAME', label:'Watershed Name', id: ''}, {title: 'Town Boundary', field: 'TOWN', label:'Town Name', id: ''}]
                            },
