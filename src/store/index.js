@@ -73,14 +73,18 @@ export default createStore({
         //push main header to the object
         obj.push({label: service.title, children: [], id: 999 + index, noTick: true, type: 'header'})
         let storeNodes = []
-
+        let type = ''
         layerJson.forEach((l) => {
+          service.popupTemplate.forEach((popup) =>{ 
+            if (l.id == popup.id){type = 'Featue Layer'}
+            else(type = 'Raster Layer')
+          })
           // add layer to layer viewer if it's id is not present in the skip array
           if (service.skipLayers.indexOf(l.id) == -1){
               // Group Layer with no parent
              if (l.type == "Group Layer" && !l.parentLayer){
-                       //push the object to the list as child of main header
-                obj[index].children.push({label: l.name, children: [], id: l.id + "_" + index, noTick: true, type: l.type})
+                //push the object to the list as child of main header
+                obj[index].children.push({label: l.name, children: [], id: l.id + "_" + index, noTick: true, type: type})
                 //find the index of the object we just pushed, saves the reference to the location
                 let parentIndex = obj[index].children.findIndex(( obj => obj.id  == l.id + "_" + index))
                 //save the parent node to the store with reference to its location in the object
@@ -93,7 +97,7 @@ export default createStore({
                     //set the location of the parent
                     let parentLoc = storeNodes[nodesIndex].parentLoc 
                     //push the child to the parent            
-                    parentLoc.children.push({label: l.name, children: [], body: 'toggle', id: l.id + "_" + index, description: l.description, type: l.type})
+                    parentLoc.children.push({label: l.name, children: [], body: 'toggle', id: l.id + "_" + index, description: l.description, type: type})
               }
               // group layer with parent
              if (l.type == "Group Layer" && l.parentLayer){
@@ -102,7 +106,7 @@ export default createStore({
                 //set the location of the parent
                 let parentLoc = storeNodes[nodesIndex].parentLoc 
                 //push the new parent into the found parent as child
-                parentLoc.children.push({label: l.name, children: [], id: l.id + "_" + index, noTick: true, type: l.type})
+                parentLoc.children.push({label: l.name, children: [], id: l.id + "_" + index, noTick: true, type: type})
                 //find the index of the child we just pushed
                 let parentIndex = parentLoc.children.findIndex(( obj => obj.id == l.id + "_" + index))   
                 //save the reference to the location          
@@ -112,7 +116,7 @@ export default createStore({
              }
               // feature layer with no parent length = number of nodes
               if (l.type !== "Group Layer" && !l.parentLayer){
-                  obj[index].children.push({label: l.name, children: [], body: 'toggle', id: l.id + "_" + index, description: l.description, type: l.type})
+                  obj[index].children.push({label: l.name, children: [], body: 'toggle', id: l.id + "_" + index, description: l.description, type: type})
               }
             }
          })
