@@ -1,7 +1,7 @@
 <template>
   <header> 
     <span>App Title</span>
-    <div><q-btn id="helpButton" @click="showHelp=true; step=3" padding="none" color="white" flat icon="help"  /></div>
+    <div><q-btn @click="showHelp=true; step=3" padding="none" color="white" flat icon="help"  /></div>
    
   </header>
 
