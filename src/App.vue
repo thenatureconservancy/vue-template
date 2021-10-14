@@ -81,6 +81,7 @@ export default {
   mounted() {
     // create data store for the app
    this.$store.dispatch('requestSupportingLayers')
+   this.$q.screen.setSizes({ sm: 700 })
   },
   methods:{
     updateScrollContainerHeight(value){
