@@ -1,8 +1,7 @@
 <template>
-  <header> 
+  <header class="print-hide"> 
     <span>App Title</span>
     <div><q-btn @click="showHelp=true; step=3" padding="none" color="white" flat icon="help"  /></div>
-   
   </header>
 
     <!-- INTRO DIALOG -->
@@ -33,52 +32,40 @@ export default {
     }
   },
   methods: {
-    selectPanelType(event){
-      console.log(event)
-    }
+ 
   }
 
 }
 </script>
 
 <style scoped>
-    header{
-        background: var(--q-primary);
-        height: 50px;
-        color: #fff;
-        font-size: 22px;
-        padding: 10px 20px;
-        box-shadow: 0px 8px 8px -2px rgb(51 51 51 / 42%);
-        position: relative;
-        z-index: 10;
-        display: flex;
-    }
+  header{
+    background: var(--q-primary);
+    height: 50px;
+    color: #fff;
+    font-size: 22px;
+    padding: 10px 20px;
+    box-shadow: 0px 8px 8px -2px rgb(51 51 51 / 42%);
+    position: relative;
+    z-index: 10;
+    display: flex;
+  }
 
-    header span{
-      flex: 1;
-      width: 700px;
-      overflow: hidden;
-      white-space: wrap; 
-      text-overflow: ellipsis;
-    }
+  header span{
+    flex: 1;
+    width: 700px;
+    overflow: hidden;
+    white-space: wrap; 
+    text-overflow: ellipsis;
+  }
 
-    header button{
-      font-size: 15px;
-    }
+  header button{
+    font-size: 15px;
+  }
     
-    .minHeight{
-      min-height: 200px;
-    }
-
-    .maxWidth{
-      max-width: 1000px;
-    }
-
-    @media screen and (max-width: 700px){
-     .minHeight{
-       min-height: 100%;
-      }
-     header{
+  
+  @media screen and (max-width: 700px){
+    header{
       background: var(--q-primary);
       height: 30px;
       color: #fff;
@@ -91,9 +78,6 @@ export default {
     }
     header button{
       font-size: 12px;
-    }
-    .selected{
-      color: #8c9fb9
     }
 
 }

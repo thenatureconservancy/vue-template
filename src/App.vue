@@ -1,6 +1,9 @@
 <template>
+  <div id="print" class="print-only" >
+    <the-print></the-print>
+  </div>
   <the-header></the-header>
-   <div id="mobile" v-if="smallScreen">
+   <div id="mobile" v-if="smallScreen" class="print-hide">
     <q-splitter
       v-model="splitterModelMobile"
       unit="px"
@@ -23,7 +26,7 @@
       </template>
     </q-splitter>
   </div>
-  <div id="desktop" v-if="!smallScreen">
+  <div id="desktop" v-if="!smallScreen" class="print-hide">
       <q-splitter
       v-model="splitterModel"
       unit="px"
@@ -58,11 +61,12 @@ import TheHeader from './components/UI/TheHeader.vue'
 import ThePanel from './components/ThePanel.vue'
 import ThePanelTabsHorizontal from './components/ThePanelTabsHorizontal.vue'
 import ThePanelTabsVertcial from './components/ThePanelTabsVertical.vue'
+import ThePrint from './components/ThePrint.vue'
 
 export default {
   name: 'App',
   components: {
-    TheMap, TheHeader, ThePanel, ThePanelTabsVertcial, ThePanelTabsHorizontal
+    TheMap, TheHeader, ThePanel, ThePanelTabsVertcial, ThePanelTabsHorizontal, ThePrint
     //TheMapToggle, TheSideNav
   },
   data(){
@@ -102,10 +106,10 @@ export default {
 
 @media screen and (max-width: 700px){
  
-   .q-splitter__before, .q-splitter__after {
+  .q-splitter__before, .q-splitter__after {
       overflow: hidden !important;
     }
-   .esri-view-width-xsmall .esri-expand--auto .esri-expand__mask--expanded {
+  .esri-view-width-xsmall .esri-expand--auto .esri-expand__mask--expanded {
     display: none;
    }
   .esri-view-width-xsmall .esri-expand--auto .esri-expand__container--expanded {

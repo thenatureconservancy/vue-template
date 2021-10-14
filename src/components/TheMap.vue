@@ -2,7 +2,13 @@
   <div id="map">
     <div id="supportingLayers" v-if="$store.state.config.supportingLayersOnMap">
       <SupportingLayers displayClass="supportingLayersMap"/>
-   </div>
+    </div>
+    <button
+      id="printBtn"
+      class="esri-widget--button esri-interactive esri-icon-printer esriCustomButton"
+      title="Print Map"
+      @click="getMapPrint()"
+    ></button>
     <div id="toolbarDiv" class="">
        <button
         id="distance"
@@ -40,7 +46,8 @@ import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 import ScaleBar from "@arcgis/core/widgets/ScaleBar"
 
 //global in order to have access to the maplayer
-let esri = { modelLayer: '', supportingMapLayer:'', legend: '', map:'', measurement:'', lgExpand:''}
+let esri = { mapView: '', modelLayer: '', supportingMapLayer:'', legend: '', map:'', measurement:'',
+lgExpand:''}
 
 
 export default {
@@ -82,7 +89,7 @@ export default {
     })
 
     //create the map view 
-    const mapView = new MapView({
+     esri.mapView = new MapView({
       map: esri.map,
       //center: [-70.99501567725498, 42.310350073610834],
       center: [-76.62437061849212,9.069409582028836],
@@ -114,45 +121,45 @@ export default {
       let supportingLayersExpand = new Expand({
         expandIconClass: "esri-icon-layer-list",  
         expandTooltip: "Expand LayerList", 
-        view: mapView,
+        view: esri.mapView,
         content: document.getElementById('supportingLayers')
       })
-      mapView.ui.add(supportingLayersExpand, "top-right")
+      esri.mapView.ui.add(supportingLayersExpand, "top-right")
     }
-
+ 
     //add scalebar widget
     let scaleBar = new ScaleBar({
-    view: mapView,
+    view: esri.mapView,
     unit: 'dual'
     })
-    mapView.ui.add(scaleBar, {
+    esri.mapView.ui.add(scaleBar, {
     position: "bottom-right"
     })
 
     //add measure tools
     esri.measurement = new Measurement({
-      view: mapView,
+      view: esri.mapView,
     });
-    mapView.ui.add(esri.measurement, "top-left");
+    esri.mapView.ui.add(esri.measurement, "top-left");
 
     // create legend widget
     esri.legend = new Legend({
-      view: mapView
+      view: esri.mapView
     });
 
     // create expand widget to hide and show legend
     esri.lgExpand = new Expand({
-      view: mapView,
+      view: esri.mapView,
       content: esri.legend
     })
 
     // add expand to map
-    mapView.ui.add(esri.lgExpand, "bottom-left")
+    esri.mapView.ui.add(esri.lgExpand, "bottom-left")
     // show expanded legend on desktop, collapse on mobile
     this.$q.screen.lt.sm || this.$q.screen.lt.md ? true : esri.lgExpand.expand()
     
      //watch size of map view and adjust legend to close if map gets too small
-    mapView.on("resize", function(event){
+    esri.mapView.on("resize", function(event){
       if (event.width < 546){
         esri.lgExpand.collapse()
       }
@@ -169,17 +176,17 @@ export default {
     });
     // basemap gallery widget
     var basemapGallery = new BasemapGallery({
-      view: mapView,
+      view: esri.mapView,
       source: source,
       container: document.createElement("div")
     });
     // expand to hold basemap gallery
     var bgExpand = new Expand({
-      view: mapView,
+      view: esri.mapView,
       content: basemapGallery
     });
     // place expand in view
-    mapView.ui.add(bgExpand, {
+    esri.mapView.ui.add(bgExpand, {
       position: "top-right"
     });
     // close expand when basemap is changed
@@ -188,7 +195,7 @@ export default {
     });
 
     // move zoom controls to top right
-    mapView.ui.move([ "zoom" ], "top-right")
+    esri.mapView.ui.move([ "zoom" ], "top-right")
   },  
 
   methods: {
@@ -316,6 +323,15 @@ export default {
       }
     },
 
+    getMapPrint(){
+      esri.mapView.takeScreenshot({width: 1000, height: 700}).then((screenshot) =>  {
+        let image = screenshot.dataUrl
+        this.$store.commit('updateMapPrintURI', image)
+        setTimeout(function () { // wait until all resources loaded 
+              window.print()
+            }, 250);
+      })
+    },
 
     activateAreaMeasurement(){
       const distanceButton = document.getElementById("distance")
@@ -369,7 +385,14 @@ export default {
     }
   
 }
-
+#printBtn{
+  position: absolute;
+  z-index: 100;
+  right: 15px;
+  top: 175px;
+  border: none;
+  box-shadow: 1.5px 1.5px 1px 0px rgb(0 0 0 / 40%);
+}
 #toolbarDiv {
   position: absolute;
   left: 10px;

@@ -33,7 +33,8 @@ export default createStore({
 
       // app state info -- layout
       showControls: false,
-      hideControls: true
+      hideControls: true,
+      mapPrintURI: ''
    },
   mutations: {
     //data retrieved from web services
@@ -56,6 +57,9 @@ export default createStore({
     updateSupportingLayerVisibleOpacity(state, obj){
       state.supportingVisibleLayerOpacity = obj
     },
+    updateMapPrintURI(state, uri){
+      state.mapPrintURI = uri
+    }
     
   },
    
