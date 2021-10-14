@@ -2,7 +2,7 @@
   <the-header></the-header>
    <div id="mobile" v-if="smallScreen">
     <q-splitter
-      v-model="splitterModel"
+      v-model="splitterModelMobile"
       unit="px"
       separator-class="bg-primary"
       horizontal
@@ -67,7 +67,8 @@ export default {
   },
   data(){
     return{
-     splitterModel: 400,
+     splitterModel: this.$store.state.config.panelDisplayType == 'tabsVertical' ? 500 : 600,
+     splitterModelMobile: this.$store.state.config.panelDisplayType == 'tabsVertical' ? 300 : 400,
      panelScreenSize:  'v-slot:before'
     }
       
@@ -83,8 +84,14 @@ export default {
   },
   methods:{
     updateScrollContainerHeight(value){
+      //this function updates the height of the scroll container (tab panels) in mobile view
+      
+      //todo: notate what does the 150 control
       let newVal = value + 150
-      document.getElementById('panelM').style.height = 'calc(100vh - ' + newVal  + 'px)' 
+      //document.getElementById('panelM').style.height = 'calc(100vh - ' + newVal  + 'px)' 
+      document.getElementsByClassName("panelM").forEach((elem)=>{
+        elem.style.height = 'calc(100vh - ' + newVal  + 'px)'
+      })
     }
   }
 }

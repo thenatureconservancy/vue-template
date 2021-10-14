@@ -37,6 +37,7 @@ import Expand from "@arcgis/core/widgets/Expand"
 import PortalSource from "@arcgis/core/widgets/BasemapGallery/support/PortalBasemapsSource"
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery"
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+import ScaleBar from "@arcgis/core/widgets/ScaleBar"
 
 //global in order to have access to the maplayer
 let esri = { modelLayer: '', supportingMapLayer:'', legend: '', map:'', measurement:'', lgExpand:''}
@@ -118,6 +119,15 @@ export default {
       })
       mapView.ui.add(supportingLayersExpand, "top-right")
     }
+
+    //add scalebar widget
+    let scaleBar = new ScaleBar({
+    view: mapView,
+    unit: 'dual'
+    })
+    mapView.ui.add(scaleBar, {
+    position: "bottom-right"
+    })
 
     //add measure tools
     esri.measurement = new Measurement({
