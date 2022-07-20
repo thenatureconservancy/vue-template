@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import { Quasar } from "quasar";
 import quasarUserOptions from "./quasar-user-options";
+import './registerServiceWorker'
 
 const app = createApp(App)
 app.use(store)

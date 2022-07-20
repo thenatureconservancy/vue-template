@@ -1,4 +1,20 @@
 <template>
+  <v-snackbar
+    v-if="updateExists"
+    class="q-pa-md"
+    bottom
+    right
+    :value="updateExists"
+    :timeout="0"
+    color="primary"
+  >
+    <span class="text-caption">
+      An update is available
+      <q-btn flat @click="refreshApp" size="sm" color="primary">
+        Update
+      </q-btn></span
+    >
+  </v-snackbar>
   <div id="print" class="print-only">
     <the-print></the-print>
   </div>
@@ -88,7 +104,22 @@ export default {
       splitterModelMobile:
         this.$store.state.config.panelDisplayType == 'tabsVertical' ? 300 : 400,
       panelScreenSize: 'v-slot:before',
+      //for the service worker (pwa update)
+      registration: null,
+      updateExists: false,
     };
+  },
+  created() {
+    document.addEventListener('swUpdated', this.updateAvailable, {
+      once: true,
+    });
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      // We'll also need to add 'refreshing' to our data originally set to false.
+      if (this.refreshing) return;
+      this.refreshing = true;
+      // Here the actual reload of the page occurs
+      window.location.reload();
+    });
   },
   computed: {
     smallScreen() {
@@ -120,6 +151,17 @@ export default {
         elem.style.height = 'calc(100vh - ' + newVal + 'px)';
       });
     },
+  },
+  updateAvailable(event) {
+    this.registration = event.detail;
+    this.updateExists = true;
+  },
+  refreshApp() {
+    this.updateExists = false;
+    // Make sure we only send a 'skip waiting' message if the SW is waiting
+    if (!this.registration || !this.registration.waiting) return;
+    // Send message to SW to skip the waiting and activate the new SW
+    this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   },
 };
 </script>

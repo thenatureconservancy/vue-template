@@ -33,7 +33,7 @@
       </q-menu>
     </q-btn>
     <span class="text-weight-thin text-white"
-      ><span class="text-weight-thin"> Application Title</span>
+      ><span class="text-weight-thin"> Application Title Update</span>
       <span class="text-weight-thin text-secondary"> </span>
       <span class="text-secondary text-subtitle1 text-weight-thin"
         >&nbsp;&nbsp;Application Subtitle</span
@@ -53,11 +53,11 @@
   <!-- INTRO DIALOG -->
   <q-dialog v-model="showHelp" :persistent="persistent">
     <q-card style="height: 72vh; max-width: 70vw">
-      <q-toolbar class="bg-primary">
+      <q-toolbar class="bg-white">
         <q-toolbar-title>
-          <span class="text-weight-thin text-white"
-            >Maine:
-            <span class="text-weight-thin"> Mapping &amp; Science </span>
+          <span class="text-weight-thin text-primary"
+            >Application Title
+            <span class="text-weight-thin"> app subtitle </span>
           </span></q-toolbar-title
         >
       </q-toolbar>
@@ -65,25 +65,6 @@
         src="pexels-jeshootscom-576832.jpg"
         style="width: 70vw;height:55vh"
       >
-        <div
-          style="background-color: rgba(255, 255, 255, 0.8);color: black; width: 40vw; font-size:17px;padding:20px"
-          class="absolute-center text-subtitle2 text-left text-weight-regular"
-        >
-          <div class="bg-blue-grey-4 q-pa-sm q-mb-md">
-            <h5 class="text-weight-regular text-primary q-ma-none">
-              Coastal Risk Explorer
-            </h5>
-          </div>
-          Rising sea levels will impact Maine’s coast in many different ways.
-          One important effect will be the inundation of roads, which will
-          prevent access to homes and businesses as roads are flooded. Use this
-          tool to explore how rising sea levels will affect roads in coastal
-          cities and towns, see where road networks will be inaccessible to
-          emergency responders, and how that relates to the overall social
-          vulnerability of the community. Social vulnerability is provided for
-          each coastal block group, based upon 17 socioeconomic and demographic
-          factors.
-        </div>
       </q-img>
       <q-card-actions class="q-pb-none">
         <q-checkbox
