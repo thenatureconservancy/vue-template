@@ -1,13 +1,10 @@
 <template>
   <div :class="displayClass" @click.stop @keypress.stop>
-    <p class="text-subtitle2 text-primary q-mb-none">
+    <p class="text-subtitle2 text-dark q-mb-none">
       {{ $store.state.config.supportingLayersTitle }}
     </p>
-    <q-separator></q-separator>
-    <p class="q-pa-md">
-      Learn more about your area of interest by selecting from these additional
-      information layers.
-    </p>
+    <q-separator class="q-mb-md"></q-separator>
+
     <!--q-input
       ref="filterRef"
       class="q-mb-md"
@@ -25,7 +22,7 @@
         />
       </template>
     </q-input-->
-    <q-linear-progress
+    <!--q-linear-progress
       v-if="!showTree"
       dark
       query
@@ -75,15 +72,16 @@
                 <q-card class="">
                   <q-scroll-area
                     v-if="prop.node.description"
-                    style="height:150px"
+                    style="height:200px"
                     :thumb-style="{
                       background: 'var(--q-secondary)',
                       width: '4px',
                     }"
                   >
-                    <div class="q-mr-md">
-                      {{ prop.node.description }}
-                    </div>
+                    <div
+                      class="q-mr-md text-blue-grey-9"
+                      v-html="prop.node.description"
+                    ></div>
                   </q-scroll-area>
 
                   <div class="row items-left q-pa-sm">
@@ -112,7 +110,7 @@
           </div>
         </template>
       </q-tree>
-    </div>
+    </div-->
   </div>
 </template>
 
@@ -203,7 +201,7 @@ export default {
   max-height: calc(100vh - 120px);
   overflow-x: hidden;
   overflow-y: auto;
-  min-width: 460px;
+  min-width: 350px;
   padding: 20px;
 }
 

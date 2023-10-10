@@ -13,35 +13,9 @@ export default createStore({
       supportingMapLayers: [
         {
           mapService:
-            'https://services2.coastalresilience.org/arcgis/rest/services/Maine/Coastal_Risk_Explorer/MapServer/',
-          skipLayers: [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-          ],
-          title: 'Maine',
+            'https://cirrus.tnc.org/arcgis/rest/services/Mangrove_Explorer/Mangrove_Explorer_Private/MapServer',
+          skipLayers: [],
+          title: 'Mangrove Explorer',
           popupTemplate: [
             {
               id: 9999,
@@ -60,13 +34,14 @@ export default createStore({
         },
       ],
 
-      supportingLayersTitle: 'Additional Layers',
+      supportingLayersTitle: 'View Supplementary Layers',
       supportingLayersOnMap: true,
-      supportingLayersInPanel: true,
-      panelDisplayType: 'tabsVertical', //plain, tabsHorizontal, tabsVertical
-      appDisplayType: 'webMap', //storyMap, webMap
+      supportingLayersInPanel: false,
+      panelDisplayType: 'plain', //plain, tabsHorizontal, tabsVertical
+      appDisplayType: 'webMap',
       condensedTabs: false,
       containerWidth: '',
+      panelWidth: 0,
     },
     // app state info -- supporting layers
     tree: { ticked: [], expanded: [999], tickedObj: [] },
@@ -77,6 +52,8 @@ export default createStore({
     showControls: false,
     hideControls: true,
     mapPrintURI: '',
+    closeInfo: false,
+    openLayers: false,
   },
   mutations: {
     //data retrieved from web services
@@ -107,6 +84,15 @@ export default createStore({
     },
     updateContainerWidth(state, val) {
       state.containerWidth = val;
+    },
+    updatePanelWidth(state, val) {
+      state.config.panelWidth = val;
+    },
+    updateCloseInfo(state) {
+      state.closeInfo = !state.closeInfo;
+    },
+    updateOpenLayers(state) {
+      state.openLayers = !state.openLayers;
     },
   },
 
@@ -160,7 +146,11 @@ export default createStore({
                     parentIndex: parentIndex,
                     parentLoc: obj[index].children[parentIndex],
                     parentId: l.id + '_' + index,
-                    description: l.description,
+                    description: l.description
+                      .replace('&lt;/a&gt;', '</a>')
+                      .replace('&lt;a', '<a')
+                      .replace('&lt;', '<')
+                      .replace('&gt;', '>'),
                   });
                 }
                 // featurel layer with parent
@@ -177,7 +167,11 @@ export default createStore({
                     children: [],
                     body: 'toggle',
                     id: l.id + '_' + index,
-                    description: l.description,
+                    description: l.description
+                      .replace('&lt;/a&gt;', '</a>')
+                      .replace('&lt;a', '<a')
+                      .replace('&lt;', '<')
+                      .replace('&gt;', '>'),
                     type: type,
                   });
                 }
@@ -208,7 +202,11 @@ export default createStore({
                     parentIndex: parentIndex,
                     parentLoc: parentLoc,
                     parentId: l.id + '_' + index,
-                    description: l.description,
+                    description: l.description
+                      .replace('&lt;/a&gt;', '</a>')
+                      .replace('&lt;a', '<a')
+                      .replace('&lt;', '<')
+                      .replace('&gt;', '>'),
                   });
                 }
                 // feature layer with no parent length = number of nodes
@@ -218,7 +216,11 @@ export default createStore({
                     children: [],
                     body: 'toggle',
                     id: l.id + '_' + index,
-                    description: l.description,
+                    description: l.description
+                      .replace('&lt;/a&gt;', '</a>')
+                      .replace('&lt;a', '<a')
+                      .replace('&lt;', '<')
+                      .replace('&gt;', '>'),
                     type: type,
                   });
                 }

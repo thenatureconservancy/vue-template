@@ -3,13 +3,7 @@
     <div id="supportingLayers" v-if="$store.state.config.supportingLayersOnMap">
       <SupportingLayers displayClass="supportingLayersMap" />
     </div>
-    <button
-      id="printBtn"
-      class="esri-widget--button esri-interactive esri-icon-printer esriCustomButton"
-      title="Print Map"
-      @click="getMapPrint()"
-    ></button>
-    <div id="toolbarDiv" class="">
+    <!--div id="toolbarDiv" class="">
       <button
         id="distance"
         class="esri-widget--button esri-interactive esri-icon-measure-line esriCustomButton"
@@ -28,12 +22,38 @@
         title="Clear Measurements"
         @click="clearMeasurements()"
       ></button>
+    </div-->
+    <div id="infoDiv" class="bg-white">
+      <div id="" style="position: relative">
+        <q-bar class="bg-blue-grey-1">
+          <div class="cursor-pointer">Info</div>
+          <q-space />
+          <q-btn dense flat icon="minimize" @click="this.infoOpened = false" />
+          <q-btn
+            dense
+            flat
+            icon="crop_square"
+            @click="this.infoOpened = true"
+          />
+        </q-bar>
+        <div
+          class="text-blue-grey-7"
+          :style="
+            this.infoOpened
+              ? 'width:350px;height:350px'
+              : 'width:0px;height:0px'
+          "
+        >
+          <div class="q-pa-md" v-if="this.infoOpened">
+            <p class="text-h6">Select a feature on the map to view info</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import SupportingLayers from '../AppTools/SupportingLayers.vue';
 import Map from '@arcgis/core/Map';
 import MapView from '@arcgis/core/views/MapView';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
@@ -44,6 +64,8 @@ import PortalSource from '@arcgis/core/widgets/BasemapGallery/support/PortalBase
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import ScaleBar from '@arcgis/core/widgets/ScaleBar';
+import SupportingLayers from '../AppTools/SupportingLayers.vue';
+//import draggable from 'vuedraggable';
 
 //global in order to have access to the maplayer
 let esri = {
@@ -54,16 +76,16 @@ let esri = {
   map: '',
   measurement: '',
   lgExpand: '',
+  supportingLayersExpand: '',
 };
 
 export default {
   name: 'TheMap',
-  components: {
-    SupportingLayers,
-  },
+  components: { SupportingLayers },
   data() {
     return {
       active: true,
+      infoOpened: true,
     };
   },
   computed: {
@@ -75,6 +97,12 @@ export default {
       //returns object {value: OpacVal, id: Layerid}
       return this.$store.state.supportingVisibleLayerOpacity;
     },
+    closeInfo() {
+      return this.$store.state.closeInfo;
+    },
+    openLayers() {
+      return this.$store.state.openLayers;
+    },
   },
   watch: {
     supportingMapVisibleLayers() {
@@ -83,21 +111,26 @@ export default {
     supportingVisibleLayerOpacity() {
       this.updateSupportingOpacity();
     },
+    closeInfo() {
+      this.infoOpened = false;
+    },
+    openLayers() {
+      esri.supportingLayersExpand.expand();
+    },
   },
 
   mounted() {
     //select a basemap
     esri.map = new Map({
-      basemap: 'topo-vector',
+      basemap: 'hybrid',
     });
 
     //create the map view
     esri.mapView = new MapView({
       map: esri.map,
-      //center: [-70.99501567725498, 42.310350073610834],
-
-      center: [-91.1428856564941, 38.10112862716938],
-      zoom: 9,
+      //center: [-70.99501567725498, 42.310350073610834],,,
+      center: [-78.18194336981071, 35.07983287679],
+      zoom: 8,
       container: this.$el,
     });
 
@@ -181,14 +214,16 @@ export default {
 
     //add supporting layers widget to map if true
     if (this.$store.state.config.supportingLayersOnMap) {
-      let supportingLayersExpand = new Expand({
-        expandIconClass: 'esri-icon-layer-list',
+      esri.supportingLayersExpand = new Expand({
+        expandIconClass: 'esri-icon-collection',
         expandTooltip: 'Expand LayerList',
         view: esri.mapView,
         content: document.getElementById('supportingLayers'),
       });
-      esri.mapView.ui.add(supportingLayersExpand, 'top-right');
+      esri.mapView.ui.add(esri.supportingLayersExpand, 'top-left');
     }
+
+    //add info widget
 
     //add scalebar widget
     let scaleBar = new ScaleBar({
@@ -203,7 +238,7 @@ export default {
     esri.measurement = new Measurement({
       view: esri.mapView,
     });
-    esri.mapView.ui.add(esri.measurement, 'top-left');
+    esri.mapView.ui.add(esri.measurement, 'top-right');
 
     // create legend widget
     esri.legend = new Legend({
@@ -214,24 +249,21 @@ export default {
     esri.lgExpand = new Expand({
       view: esri.mapView,
       content: esri.legend,
+      expandTooltip: 'Legend',
     });
 
     // add expand to map
     esri.mapView.ui.add(esri.lgExpand, 'bottom-left');
-    // show expanded legend on desktop, collapse on mobile
-    this.$q.screen.lt.sm || this.$q.screen.lt.md
-      ? true
-      : esri.lgExpand.expand();
 
     //watch size of map view and adjust legend to close if map gets too small
-    esri.mapView.on('resize', function(event) {
+    /* esri.mapView.on('resize', function(event) {
       if (event.width < 546) {
         esri.lgExpand.collapse();
       }
       if (event.width > 546) {
         esri.lgExpand.expand();
       }
-    });
+    });*/
 
     // basemaps
     const allowedBasemapTitles = [
@@ -259,7 +291,7 @@ export default {
     });
     // place expand in view
     esri.mapView.ui.add(bgExpand, {
-      position: 'top-right',
+      position: 'top-left',
     });
     // close expand when basemap is changed
     esri.map.watch('basemap.title', function() {
@@ -267,7 +299,9 @@ export default {
     });
 
     // move zoom controls to top right
-    esri.mapView.ui.move(['zoom'], 'top-right');
+    esri.mapView.ui.move(['zoom'], 'top-left');
+
+    //make popup
   },
 
   methods: {
@@ -507,14 +541,6 @@ export default {
   position: relative;
   border-bottom: #999 solid 1pt;
 }
-#mapStory {
-  flex: 1;
-  height: calc(100vh - 200px);
-  height: 100%;
-  width: 100%;
-  position: relative;
-  border-bottom: #999 solid 1pt;
-}
 
 @media screen and (max-width: 700px) {
   #map {
@@ -525,18 +551,18 @@ export default {
     border-bottom: #999 solid 1pt;
   }
 }
-#printBtn {
-  position: absolute;
-  z-index: 100;
-  right: 15px;
-  top: 175px;
-  border: none;
-  box-shadow: 1.5px 1.5px 1px 0px rgb(0 0 0 / 40%);
-}
+
 #toolbarDiv {
   position: absolute;
-  left: 10px;
-  top: 10px;
+  right: 15px;
+  top: 18px;
+  display: flex;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 60%);
+}
+#infoDiv {
+  position: absolute;
+  right: 15px;
+  top: 18px;
   display: flex;
   box-shadow: 0 1px 2px rgb(0 0 0 / 60%);
 }
@@ -587,5 +613,11 @@ esri-expand__content esri-expand__content--expanded div {
 
 .esri-scale-bar__line {
   background-color: white !important;
+}
+.esri-widget--button {
+  font-size: 20px;
+}
+.esri-collapse__icon {
+  font-size: 20px;
 }
 </style>

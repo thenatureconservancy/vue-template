@@ -2,17 +2,16 @@ import 'quasar/dist/quasar.css';
 import '@quasar/extras/roboto-font/roboto-font.css';
 import '@quasar/extras/material-icons/material-icons.css';
 import '@quasar/extras/material-icons-outlined/material-icons-outlined.css';
-import '@quasar/extras/fontawesome-v5/fontawesome-v5.css';
 
 // To be used on app.use(Quasar, { ... })
 export default {
   config: {
     animations: 'all',
     brand: {
-      primary: '#374269',
-      secondary: '#9ED9FF',
+      primary: '#77bf71',
+      secondary: '#49a942',
       accent: '#96ccc1',
-      dark: '#1d1d1d',
+      dark: '#226539',
 
       positive: '#ff163c',
       negative: '#c5351c',
@@ -69,4 +68,5 @@ export default {
     },
   },
   plugins: {},
+  extras: ['material-symbols-outlined'],
 };

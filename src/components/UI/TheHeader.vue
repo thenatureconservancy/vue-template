@@ -1,6 +1,6 @@
 <template>
   <header class="print-hide">
-    <q-btn flat icon="menu" color="white" padding="none" class="q-mr-md">
+    <q-btn flat icon="menu" color="dark" padding="none" class="q-mr-md">
       <q-menu>
         <q-list style="min-width: 100px" dense>
           <q-item
@@ -32,60 +32,86 @@
         </q-list>
       </q-menu>
     </q-btn>
-    <span class="text-weight-thin text-white"
-      ><span class="text-weight-thin"> Application Title Update</span>
-      <span class="text-weight-thin text-secondary"> </span>
-      <span class="text-secondary text-subtitle1 text-weight-thin"
-        >&nbsp;&nbsp;Application Subtitle</span
-      ></span
-    >
+    <span class="">
+      <span class="text-dark text-bold">Decision Support Tool </span>
+    </span>
     <div>
       <q-btn
-        @click="showHelp = true"
-        padding="none"
-        color="white"
+        :icon="optionsVisible ? 'visibility' : 'visibility_off'"
+        label="Advanced Options"
+        size="md"
+        class="q-mr-sm"
+        color="dark"
         flat
-        icon="help"
+        @click="this.openPanel"
+      />
+
+      <q-btn
+        @click="showHelp = true"
+        label="Help"
+        size="md"
+        color="dark"
+        flat
+      />
+      <q-btn
+        @click="showAbout = true"
+        label="About"
+        size="md"
+        color="dark"
+        flat
       />
     </div>
   </header>
 
   <!-- INTRO DIALOG -->
-  <q-dialog v-model="showHelp" :persistent="persistent">
-    <q-card style="height: 72vh; max-width: 70vw">
-      <q-toolbar class="bg-white">
-        <q-toolbar-title>
-          <span class="text-weight-thin text-primary"
-            >Application Title
-            <span class="text-weight-thin"> app subtitle </span>
-          </span></q-toolbar-title
-        >
-      </q-toolbar>
-      <q-img
-        src="pexels-jeshootscom-576832.jpg"
-        style="width: 70vw;height:55vh"
-      >
-      </q-img>
-      <q-card-actions class="q-pb-none">
-        <q-checkbox
-          v-if="showUserOption"
-          v-model="userHideDialogOptionMeramac"
-          label="Do not show again"
-        />
-        <q-space />
-        <q-btn
-          flat
-          label="OK"
-          color="primary"
-          @click="setUserChoice"
-          v-close-popup
-        />
-      </q-card-actions>
-      <div v-if="showUserOption" class="text-caption q-ml-md text-grey-7">
-        *This dialog can be rerieved at any time by clicking the help button at
-        the top of the screen
+  <q-dialog v-model="showAbout" maximized persistent>
+    <div class="row">
+      <div class="col-6 overlaydiv">
+        <q-img src="capefear.jpg" style="height:100%"></q-img>
       </div>
-    </q-card>
+      <div class="col-6 bg-white text-left q-pa-xl" style="height: 100%">
+        <p class="text-h4 text-dark text-bold">
+          About Decision Support Tool
+        </p>
+        <p class="text-dark text-body1">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
+        </p>
+        <q-btn
+          style="width: 100%"
+          size="lg"
+          color="dark"
+          @click="this.showAbout = false"
+          >Enter Site</q-btn
+        >
+      </div>
+    </div>
+  </q-dialog>
+
+  <!--HELP SCREEN-->
+  <q-dialog v-model="showHelp" maximized>
+    <div class="bg-white text-left q-pa-xl" style="height: 100%">
+      <p class="text-h4 text-dark text-bold">
+        How to use the decision support tool
+      </p>
+      <p class="text-dark text-body1">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum.
+      </p>
+      <q-btn style="" size="lg" color="dark" @click="this.showHelp = false"
+        >Close</q-btn
+      >
+    </div>
   </q-dialog>
 </template>
 
@@ -94,27 +120,19 @@ export default {
   data() {
     return {
       step: 1,
-      showHelp: true,
-      userHideDialogOptionMeramac: false,
-      showUserOption: true,
-      persistent: true,
+      showHelp: false,
+      showAbout: true,
+      optionsVisible: false,
     };
   },
-  mounted() {
-    //localStorage.userHideDialogOptionMeramac = '';
-    if (localStorage.userHideDialogOptionMeramac == 'true') {
-      this.showHelp = false;
-      this.showUserOption = false;
-      this.persistent = false;
-    }
-  },
+  mounted() {},
+
   methods: {
-    setUserChoice() {
-      if (this.userHideDialogOptionMeramac == true) {
-        localStorage.userHideDialogOptionMeramac = 'true';
-        this.showUserOption = false;
-        this.persistent = false;
-      }
+    openPanel() {
+      this.$store.commit('updateCloseInfo');
+      this.optionsVisible = !this.optionsVisible;
+      let width = this.optionsVisible ? 400 : 0;
+      this.$store.commit('updatePanelWidth', width);
     },
   },
 };
@@ -122,31 +140,16 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Are+You+Serious&family=Carattere&family=Cookie&family=Merienda&display=swap');
 header {
-  background: var(--q-primary);
+  background: rbga(255, 255, 255, 0.5);
   height: 50px;
   color: white;
   font-size: 22px;
   padding: 10px 20px;
-  box-shadow: 0px 8px 8px -2px rgb(51 51 51 / 42%);
   border-bottom: 1px solid var(--q-primary);
   position: relative;
   z-index: 10;
   display: flex;
-}
-
-.storymap {
-  background: #fff;
-  height: 50px;
-  color: #000000;
-  font-size: 25px;
-  padding: 10px 20px;
-  box-shadow: 0px 8px 8px -2px rgb(51 51 51 / 42%);
-  position: relative;
-  z-index: 10;
-  display: flex;
-  font-family: 'Merienda', cursive;
 }
 
 .q-img__content {

@@ -1,20 +1,4 @@
 <template>
-  <v-snackbar
-    v-if="updateExists"
-    class="q-pa-md"
-    bottom
-    right
-    :value="updateExists"
-    :timeout="0"
-    color="primary"
-  >
-    <span class="text-caption">
-      An update is available
-      <q-btn flat @click="refreshApp" size="sm" color="primary">
-        Update
-      </q-btn></span
-    >
-  </v-snackbar>
   <div id="print" class="print-only">
     <the-print></the-print>
   </div>
@@ -31,9 +15,7 @@
       >
         <template v-slot:after v-if="smallScreen">
           <!--PANEL COMPONENT-->
-          <the-panel-tabs-vertcial
-            v-if="$store.state.config.panelDisplayType == 'tabsVertical'"
-          ></the-panel-tabs-vertcial>
+          <the-panel></the-panel>
         </template>
         <template v-slot:separator>
           <q-avatar
@@ -52,30 +34,30 @@
     </div>
     <div id="desktop" v-if="!smallScreen" class="print-hide">
       <q-splitter
-        v-model="splitterModel"
-        unit="px"
+        reverse
+        v-model="panelWidth"
         separator-class="bg-primary"
-        :limits="[70, Infinity]"
         @update:model-value="updateCondensedTabs($event)"
+        unit="px"
+        :limits="[0, 800]"
       >
         <template v-slot:before>
-          <!--PANEL COMPONENT-->
-          <the-panel-tabs-vertcial
-            v-if="$store.state.config.panelDisplayType == 'tabsVertical'"
-          ></the-panel-tabs-vertcial>
+          <!--MAP COMPONENT-->
+          <the-map></the-map>
         </template>
         <template v-slot:separator>
           <q-avatar
             draggable="false"
-            color="primary"
+            color="dark"
             text-color="white"
             size="20px"
-            icon="drag_indicator"
-          />
+            v-if="this.panelWidth > 0"
+            ><q-icon name="drag_indicator" size="20px"> </q-icon
+          ></q-avatar>
         </template>
         <template v-slot:after>
-          <!--MAP COMPONENT-->
-          <the-map></the-map>
+          <!--PANEL COMPONENT-->
+          <the-panel></the-panel>
         </template>
       </q-splitter>
     </div>
@@ -85,7 +67,7 @@
 <script>
 import TheMap from './components/UI/TheMap.vue';
 import TheHeader from './components/UI/TheHeader.vue';
-import ThePanelTabsVertcial from './components/UI/ThePanelTabsVertical.vue';
+import ThePanel from './components/UI/ThePanel.vue';
 import ThePrint from './components/AppTools/ThePrint.vue';
 
 export default {
@@ -93,14 +75,29 @@ export default {
   components: {
     TheMap,
     TheHeader,
-    ThePanelTabsVertcial,
+    ThePanel,
     ThePrint,
     //TheMapToggle, TheSideNav
+  },
+  computed: {
+    smallScreen() {
+      return this.$q.screen.lt.sm;
+    },
+    panelWidth: {
+      get() {
+        return this.$store.state.config.panelWidth;
+      },
+      set(val) {
+        this.$store.commit('updatePanelWidth', val);
+      },
+    },
   },
   data() {
     return {
       splitterModel:
-        this.$store.state.config.panelDisplayType == 'tabsVertical' ? 650 : 750,
+        this.$store.state.config.panelDisplayType == 'plain'
+          ? this.panelWidth
+          : 750,
       splitterModelMobile:
         this.$store.state.config.panelDisplayType == 'tabsVertical' ? 300 : 400,
       panelScreenSize: 'v-slot:before',
@@ -109,23 +106,7 @@ export default {
       updateExists: false,
     };
   },
-  created() {
-    document.addEventListener('swUpdated', this.updateAvailable, {
-      once: true,
-    });
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      // We'll also need to add 'refreshing' to our data originally set to false.
-      if (this.refreshing) return;
-      this.refreshing = true;
-      // Here the actual reload of the page occurs
-      window.location.reload();
-    });
-  },
-  computed: {
-    smallScreen() {
-      return this.$q.screen.lt.sm;
-    },
-  },
+  created() {},
   mounted() {
     // create data store for the app
     this.$store.dispatch('requestSupportingLayers');
@@ -151,17 +132,6 @@ export default {
         elem.style.height = 'calc(100vh - ' + newVal + 'px)';
       });
     },
-  },
-  updateAvailable(event) {
-    this.registration = event.detail;
-    this.updateExists = true;
-  },
-  refreshApp() {
-    this.updateExists = false;
-    // Make sure we only send a 'skip waiting' message if the SW is waiting
-    if (!this.registration || !this.registration.waiting) return;
-    // Send message to SW to skip the waiting and activate the new SW
-    this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
   },
 };
 </script>
