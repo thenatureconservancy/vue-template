@@ -60,7 +60,8 @@ import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
 import Legend from '@arcgis/core/widgets/Legend';
 import Measurement from '@arcgis/core/widgets/Measurement';
 import Expand from '@arcgis/core/widgets/Expand';
-import PortalSource from '@arcgis/core/widgets/BasemapGallery/support/PortalBasemapsSource';
+import Portal from '@arcgis/core/portal/Portal';
+import PortalBasemapsSource from '@arcgis/core/widgets/BasemapGallery/support/PortalBasemapsSource';
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import ScaleBar from '@arcgis/core/widgets/ScaleBar';
@@ -120,9 +121,19 @@ export default {
   },
 
   mounted() {
+    // Portal IDs for TNC Basemaps. Use any id to set the map's basemap.
+    const tncHillshadeMapId = 'd22aed9a4acb4bc8ae8f2141732af496';
+    //const tncDarkMapId = '1f48b2b2456c44ad9c58d6741378c2ba';
+    //const oceansMapId = '67ab7f7c535c4687b6518e6d2343e8a2';
+    //const hybridMapId = '86265e5a4bbb4187a59719cf134e0018';
+
     //select a basemap
     esri.map = new Map({
-      basemap: 'hybrid',
+      basemap: {
+        portalItem: {
+          id: tncHillshadeMapId,
+        },
+      },
     });
 
     //create the map view
@@ -265,34 +276,45 @@ export default {
       }
     });*/
 
-    // basemaps
+    // Create portal. Used for PortalBasemapSource below
+    const portal = new Portal();
+
+    // Titles of TNC Basemaps to include in Basemap Gallery Widget
     const allowedBasemapTitles = [
-      'Topographic',
-      'Imagery',
       'Imagery Hybrid',
-      'Streets',
-      'Dark Gray Canvas',
+      'Ocean Basemap',
+      'TNC Light with Hillshade',
+      'TNC Dark Gray Map',
     ];
-    // filtering portal basemaps
-    const source = new PortalSource({
+
+    // Define Basemap Gallery Wideget source using ID from TNC Basemap
+    //  Gallery ArcGIS Online Group. By default, all maps from group will
+    //  be added to the Basemap Gallery Widget. The filterFunction only
+    //  brings in maps from the group whose titles match those in the
+    //  allowedBasemapTitles array above.
+
+    const source = new PortalBasemapsSource({
+      portal,
+      query: {
+        id: 'defa1b2287604d069c70af515331e30f',
+      },
+
       filterFunction: (basemap) =>
         allowedBasemapTitles.indexOf(basemap.portalItem.title) > -1,
     });
-    // basemap gallery widget
-    var basemapGallery = new BasemapGallery({
-      view: esri.mapView,
-      source: source,
-      container: document.createElement('div'),
+
+    // Create an expand widget to house the Basemap Gallery Widget. Also
+    //  create the Basemap Gallery Widget using the source and view created
+    //  above.
+
+    let view = esri.mapView;
+    const bgExpand = new Expand({
+      view,
+      content: new BasemapGallery({ source, view }),
+      expandIconClass: 'esri-icon-basemap',
     });
-    // expand to hold basemap gallery
-    var bgExpand = new Expand({
-      view: esri.mapView,
-      content: basemapGallery,
-    });
-    // place expand in view
-    esri.mapView.ui.add(bgExpand, {
-      position: 'top-left',
-    });
+    esri.mapView.ui.add(bgExpand, 'top-left');
+
     // close expand when basemap is changed
     esri.map.watch('basemap.title', function() {
       bgExpand.collapse();
