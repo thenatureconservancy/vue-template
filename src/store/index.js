@@ -13,35 +13,9 @@ export default createStore({
       supportingMapLayers: [
         {
           mapService:
-            'https://services2.coastalresilience.org/arcgis/rest/services/Maine/Coastal_Risk_Explorer/MapServer/',
-          skipLayers: [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17,
-            18,
-            20,
-            21,
-            22,
-            23,
-            24,
-            25,
-            26,
-          ],
-          title: 'Maine',
+            'https://cirrus.tnc.org/arcgis/rest/services/UMRB/CEAP_Mockup/MapServer',
+          skipLayers: [],
+          title: 'Layers',
           popupTemplate: [
             {
               id: 9999,
@@ -60,7 +34,7 @@ export default createStore({
         },
       ],
 
-      supportingLayersTitle: 'Additional Layers',
+      supportingLayersTitle: 'Supplemental Layers',
       supportingLayersOnMap: true,
       supportingLayersInPanel: true,
       panelDisplayType: 'tabsVertical', //plain, tabsHorizontal, tabsVertical
@@ -69,7 +43,8 @@ export default createStore({
       containerWidth: '',
     },
     // app state info -- supporting layers
-    tree: { ticked: [], expanded: [999], tickedObj: [] },
+    tree: { ticked: ['5_0'], expanded: [999], tickedObj: [] },
+    setTicked: '',
     selectedLayerList: [],
     supportingVisibleLayerOpacity: {},
 
@@ -95,6 +70,11 @@ export default createStore({
       state.tree.ticked = obj.ticked;
       state.tree.expanded = obj.expanded;
       state.tree.tickedObj = obj.tickedObj;
+    },
+    updateSetTicked(state, obj) {
+      //set obj setTicked ({tick: [], untick: []})
+      state.setTicked = '';
+      state.setTicked = obj;
     },
     updateSupportingLayerVisibleOpacity(state, obj) {
       state.supportingVisibleLayerOpacity = obj;

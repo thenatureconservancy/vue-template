@@ -1,6 +1,6 @@
 <template>
   <div :class="displayClass" @click.stop @keypress.stop>
-    <p class="text-subtitle2 text-primary q-mb-none">
+    <!--p class="text-subtitle2 text-primary q-mb-none">
       {{ $store.state.config.supportingLayersTitle }}
     </p>
     <q-separator></q-separator>
@@ -8,7 +8,7 @@
       Learn more about your area of interest by selecting from these additional
       information layers.
     </p>
-    <!--q-input
+    <q-input
       ref="filterRef"
       class="q-mb-md"
       outlined
@@ -140,7 +140,11 @@ export default {
     slReady() {
       return this.$store.state.data.slReady;
     },
+    setTicked() {
+      return this.$store.state.setTicked;
+    },
   },
+
   created() {
     if (this.slReady) {
       this.treeData = this.$store.state.data.supportingLayers;
@@ -175,6 +179,37 @@ export default {
         this.treeData = this.$store.state.data.supportingLayers;
         this.showTree = true;
       }
+    },
+    setTicked() {
+      console.log(this.setTicked);
+      let ticked = this.$store.state.tree.ticked;
+      let tickedObj = [];
+      this.setTicked.tick.forEach((item) => {
+        if (!this.$store.state.tree.ticked.includes(item)) {
+          ticked.push(item);
+        }
+      });
+      this.setTicked.untick.forEach((item) => {
+        if (this.$store.state.tree.ticked.includes(item)) {
+          let i = ticked.indexOf(item);
+          ticked.splice(i, 1);
+        }
+      });
+      ticked.forEach((layer) => {
+        let node = this.$refs.tree.getNodeByKey(layer);
+        let type = node.type;
+        let layerInfo = layer.split('_');
+        tickedObj.push({
+          mapServiceIndex: layerInfo[1],
+          id: layerInfo[0],
+          type: type,
+        });
+      });
+      this.$store.commit('updateTreeState', {
+        tickedObj: tickedObj,
+        ticked: ticked,
+        expanded: this.expanded,
+      });
     },
   },
   methods: {

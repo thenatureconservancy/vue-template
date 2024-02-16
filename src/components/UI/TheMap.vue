@@ -109,8 +109,8 @@ export default {
       map: esri.map,
       //center: [-70.99501567725498, 42.310350073610834],
 
-      center: [-91.1428856564941, 38.10112862716938],
-      zoom: 9,
+      center: [-91.681143, 42.048771],
+      zoom: 4,
       container: this.$el,
     });
 
@@ -145,9 +145,10 @@ export default {
                 },
               ],
             };
+
             sublayerList.push({
               id: sublayer.id,
-              visible: false,
+              visible: sublayer.id == 5 ? true : false,
               opacity: 1,
               popupTemplate: template,
             });
@@ -157,7 +158,7 @@ export default {
           else {
             sublayerList.push({
               id: sublayer.id,
-              visible: false,
+              visible: sublayer.id == 5 ? true : false,
               opacity: 1,
             });
           }

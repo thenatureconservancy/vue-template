@@ -1,10 +1,10 @@
 <template>
-  <div class="q-pt-none">
+  <div class="q-pt-none bg-black">
     <q-splitter
       style="overflow:hidden;"
       v-model="splitterModel"
       unit="px"
-      :limits="[55, 130]"
+      :limits="[25, 50]"
     >
       <!--Example with supporting layers in a vertical tab-->
 
@@ -13,10 +13,10 @@
           dark
           v-model="tab"
           vertical
-          class="text-primary"
-          active-color="white"
+          class="text-white text-weight-thin"
+          active-color="secondary"
           active-bg-color="primary"
-          indicator-color="white"
+          indicator-color="secondary"
           dense
         >
           <!--each tab has two presentations, full or condensed, based on the size of the screen-->
@@ -28,8 +28,7 @@
             to="/tab1"
             name="tab1"
           >
-            <q-icon name="bar_chart" size="sm"></q-icon>
-            Tab <br />One
+            <q-icon name="public" size="sm"></q-icon>
           </q-route-tab>
           <q-route-tab
             v-if="$store.state.condensedTabs || smallScreen"
@@ -37,45 +36,41 @@
             to="/tab1"
             name="tab1"
           >
-            <q-icon name="bar_chart" size="lg"></q-icon>
-          </q-route-tab>
-          <q-separator></q-separator>
-          <q-route-tab
-            v-if="!$store.state.condensedTabs && !smallScreen"
-            style="padding:10px;"
-            to="/tab2"
-            name="tab2"
-          >
-            <q-icon name="public" size="sm"></q-icon>
-            Tab <br />
-            Two
-          </q-route-tab>
-          <q-route-tab
-            v-if="$store.state.condensedTabs || smallScreen"
-            style="padding:10px;"
-            to="/tab2"
-            name="tab2"
-          >
             <q-icon name="public" size="lg"></q-icon>
           </q-route-tab>
           <q-separator></q-separator>
           <q-route-tab
             v-if="!$store.state.condensedTabs && !smallScreen"
             style="padding:10px;"
+            to="/tab2"
+            name="tab2"
+          >
+            <q-icon name="bar_chart" size="sm"></q-icon>
+          </q-route-tab>
+          <q-route-tab
+            v-if="$store.state.condensedTabs || smallScreen"
+            style="padding:10px;"
+            to="/tab2"
+            name="tab2"
+          >
+            <q-icon name="bar_chart" size="lg"></q-icon>
+          </q-route-tab>
+          <q-separator></q-separator>
+          <q-route-tab
+            v-if="!$store.state.condensedTabs && !smallScreen"
+            style="padding:10px;"
             to="/tab3"
             name="tab3"
           >
-            <q-icon name="person" size="sm"></q-icon>
-            Tab <br />
-            Three</q-route-tab
-          >
+            <q-icon name="print" size="sm"></q-icon>
+          </q-route-tab>
           <q-route-tab
             v-if="$store.state.condensedTabs || smallScreen"
             style="padding:10px;"
             to="/tab3"
             name="tab3"
           >
-            <q-icon name="person" size="lg"></q-icon>
+            <q-icon name="print" size="lg"></q-icon>
           </q-route-tab>
           <q-separator></q-separator>
         </q-tabs>
@@ -83,7 +78,10 @@
 
       <template v-slot:after>
         <q-tab-panels v-model="tab" animated vertical keep-alive>
-          <q-tab-panel name="tab1" class="q-pr-none q-pl-lg q-pt-lg q-pb-lg">
+          <q-tab-panel
+            name="tab1"
+            class="q-pr-none q-pl-lg q-pt-lg q-pb-lg bg-blue-grey-1"
+          >
             <q-scroll-area
               id=""
               class="panel panelM"
@@ -139,7 +137,7 @@ export default {
   data() {
     return {
       tab: 'supporting',
-      splitterModel: this.$q.screen.lt.sm ? 55 : 130,
+      splitterModel: this.$q.screen.lt.sm ? 25 : 50,
     };
   },
   computed: {

@@ -9,8 +9,8 @@ export default {
   config: {
     animations: 'all',
     brand: {
-      primary: '#374269',
-      secondary: '#9ED9FF',
+      primary: 'black',
+      secondary: '#298ac3',
       accent: '#96ccc1',
       dark: '#1d1d1d',
 

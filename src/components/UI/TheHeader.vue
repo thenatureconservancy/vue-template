@@ -33,15 +33,15 @@
       </q-menu>
     </q-btn>
     <span class="text-weight-thin text-white"
-      ><span class="text-weight-thin"> Application Title Update</span>
+      ><span class="text-weight-thin">CEAP</span>
       <span class="text-weight-thin text-secondary"> </span>
       <span class="text-secondary text-subtitle1 text-weight-thin"
-        >&nbsp;&nbsp;Application Subtitle</span
+        >&nbsp;&nbsp;Prototype 0.1</span
       ></span
     >
     <div>
       <q-btn
-        @click="showHelp = true"
+        @click="showHelp = false"
         padding="none"
         color="white"
         flat
@@ -51,7 +51,7 @@
   </header>
 
   <!-- INTRO DIALOG -->
-  <q-dialog v-model="showHelp" :persistent="persistent">
+  <q-dialog v-model="showHelp">
     <q-card style="height: 72vh; max-width: 70vw">
       <q-toolbar class="bg-white">
         <q-toolbar-title>
@@ -61,11 +61,7 @@
           </span></q-toolbar-title
         >
       </q-toolbar>
-      <q-img
-        src="pexels-jeshootscom-576832.jpg"
-        style="width: 70vw;height:55vh"
-      >
-      </q-img>
+      <q-img src="" style="width: 70vw;height:55vh"> </q-img>
       <q-card-actions class="q-pb-none">
         <q-checkbox
           v-if="showUserOption"
@@ -94,7 +90,7 @@ export default {
   data() {
     return {
       step: 1,
-      showHelp: true,
+      showHelp: false,
       userHideDialogOptionMeramac: false,
       showUserOption: true,
       persistent: true,
@@ -129,24 +125,10 @@ header {
   color: white;
   font-size: 22px;
   padding: 10px 20px;
-  box-shadow: 0px 8px 8px -2px rgb(51 51 51 / 42%);
   border-bottom: 1px solid var(--q-primary);
   position: relative;
   z-index: 10;
   display: flex;
-}
-
-.storymap {
-  background: #fff;
-  height: 50px;
-  color: #000000;
-  font-size: 25px;
-  padding: 10px 20px;
-  box-shadow: 0px 8px 8px -2px rgb(51 51 51 / 42%);
-  position: relative;
-  z-index: 10;
-  display: flex;
-  font-family: 'Merienda', cursive;
 }
 
 .q-img__content {
